@@ -183,7 +183,8 @@ const Guru = (() => {
           ['Baris tidak terbaca di Tempel Cepat', 'Awalan harus PG:, BS:, PS:, atau UR: diikuti teks. PG perlu minimal soal | jawaban. PS minimal 2 pasang dengan tanda =.'],
           ['Panjat Pinang memakai soal lain', 'Paket belum punya soal Urutan, sehingga diambil soal urutan bawaan/otomatis. Tambahkan soal di tab 🔢 Urutan.'],
           ['Huruf aneh (Ã©, â€) setelah impor .txt', 'Simpan file .txt dengan Encoding UTF-8.'],
-          ['Soal hilang setelah browser diperbarui/dibersihkan', 'Impor kembali file cadangan .json. Biasakan Ekspor setelah membuat soal.']
+          ['Soal hilang setelah browser diperbarui/dibersihkan', 'Impor kembali file cadangan .json. Biasakan Ekspor setelah membuat soal.'],
+          ['Butuh bantuan, soal bawaan keliru, atau ingin fitur baru?', 'Gratis! Ketuk tombol hijau 💬 Hubungi Kami di beranda (WhatsApp 0896-2334-6046).']
         ]))
     );
     // navigasi cepat antarbagian
