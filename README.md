@@ -61,7 +61,7 @@ atau emoji, isi nama anggota (opsional), atau 🎲 untuk nama & avatar acak. Sko
 
 ## Hubungi kami (gratis) 💬
 Tombol hijau **Hubungi Kami** di beranda dan tombol **🚩 Laporkan** di layar hasil membuka WhatsApp
-(0896-2334-6046) dengan pesan yang sudah terisi: laporan soal keliru (lengkap dengan game, jenjang, kelas, mapel),
+dengan pesan yang sudah terisi: laporan soal keliru (lengkap dengan game, jenjang, kelas, mapel),
 permintaan tambah soal/bab, request fitur, atau pertanyaan. Gratis.
 
 ## Bank Soal Guru ✏️

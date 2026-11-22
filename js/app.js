@@ -351,7 +351,7 @@ const App = (() => {
       h('p', { class: 'sub' }, 'Gratis! Laporkan soal yang keliru, minta tambahan bab, atau usulkan fitur baru lewat WhatsApp.'),
       list, where, sekolah,
       h('div', { class: 'row' }, btn('📲 Kirim via WhatsApp', 'green', send), btn('Tutup', 'white', () => ov.remove())),
-      h('p', { class: 'ct-num' }, 'WhatsApp: 0896-2334-6046 · perlu koneksi internet')));
+      h('p', { class: 'ct-num' }, 'Membuka WhatsApp · perlu koneksi internet')));
     (root.querySelector('.screen') || root).append(ov);
   }
 
