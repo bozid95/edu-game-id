@@ -59,7 +59,7 @@ const App = (() => {
       btn(`📝 Buat Bank Soal Sendiri${Guru.count() ? ` (${Guru.count()})` : ''}`, 'white', () => Guru.list(guruApi)),
       h('div', { class: 'vs-badges' }, h('span', { class: 'pill red' }, avatarEl(TEAM[0].ic), S.teams[0]), h('b', {}, 'VS'), h('span', { class: 'pill blue' }, avatarEl(TEAM[1].ic), S.teams[1]))
     ));
-    el.append(h('div', { class: 'home-foot' }, 'Soal mengacu Capaian Pembelajaran Kurikulum Merdeka (Kep. Kepala BSKAP No. 046/H/KR/2025) dengan pendekatan Pembelajaran Mendalam'));
+    el.append(h('div', { class: 'home-foot' }, 'Soal mengacu Capaian Pembelajaran Kurikulum Merdeka (BSKAP No. 046/H/KR/2025) · Pembelajaran Mendalam'));
     show(el);
   }
 
@@ -345,7 +345,7 @@ const App = (() => {
       h('p', { class: 'sub' }, 'Laporkan soal yang keliru, minta tambahan bab, atau usulkan fitur baru lewat WhatsApp.'),
       list, where, sekolah,
       h('div', { class: 'row' }, btn('📲 Kirim via WhatsApp', 'green', send), btn('Tutup', 'white', () => ov.remove())),
-      h('p', { class: 'ct-num' }, 'Membuka WhatsApp · perlu koneksi internet')));
+      h('p', { class: 'ct-num' })));
     (root.querySelector('.screen') || root).append(ov);
   }
 

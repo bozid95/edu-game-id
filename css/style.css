@@ -74,7 +74,7 @@ input{font-family:inherit}
 .vs-badges b{font-size:1.8em;color:var(--yellow);text-shadow:0 .1em 0 #c2410c}
 .pill{padding:.25em 1em;border-radius:2em;font-weight:800;box-shadow:0 .2em 0 rgba(0,0,0,.25)}
 .pill.red{background:var(--red)}.pill.blue{background:var(--blue)}
-.home-foot{position:absolute;bottom:2.4vh;left:0;right:0;text-align:left;font-size:1em;opacity:.7;padding:0 calc(2vw + 23em) 0 2vw;line-height:1.3}
+.home-foot{position:absolute;bottom:2.6vh;left:0;right:0;text-align:center;font-size:1em;opacity:.7;padding:0 calc(2vw + 23em);line-height:1.35}
 .floaters span{position:absolute;font-size:4em;opacity:.18;animation:float 5s ease-in-out infinite}
 
 /* menu header */
