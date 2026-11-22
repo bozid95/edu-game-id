@@ -57,5 +57,24 @@ fs.writeFileSync(path.join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="
 </urlset>
 `);
 
+// 5) SERVICE WORKER (PWA): simpan semua file aplikasi di perangkat agar bisa dibuka tanpa internet.
+//    VERSION = sidik isi file, jadi setiap ada perubahan soal/fitur, perangkat mengunduh versi baru otomatis saat online.
+const crypto = require('crypto');
+const SKIP = ['sw.js', 'README.md', 'PANDUAN-GURU.md', 'vercel.json', 'robots.txt', 'sitemap.xml', 'og-image.jpg', 'OFL.txt'];
+const files = [];
+(function walk(dir) {
+  fs.readdirSync(dir).forEach(n => {
+    const p = path.join(dir, n);
+    if (fs.statSync(p).isDirectory()) return walk(p);
+    if (!SKIP.includes(n) && !n.startsWith('.')) files.push(path.relative(DIST, p).split(path.sep).join('/'));
+  });
+})(DIST);
+const hash = crypto.createHash('sha1');
+files.sort().forEach(f => hash.update(f).update(fs.readFileSync(path.join(DIST, f))));
+const VERSION = hash.digest('hex').slice(0, 10);
+fs.writeFileSync(path.join(DIST, 'sw.js'), fs.readFileSync(path.join(ROOT, 'tools', 'sw.template.js'), 'utf8')
+  .replace('%VERSION%', VERSION).replace('/*FILES*/[]', JSON.stringify(['./', ...files], null, 1)));
+console.log(`service worker: versi ${VERSION}, ${files.length} file disimpan untuk offline`);
+
 const n = JSON.parse(json).reduce((s, b) => s + (b.mc || []).length + (b.tf || []).length + (b.pair || []).length + (b.ord || []).length, 0);
 console.log(`dist/ siap: ${JSON.parse(json).length} paket, ${n} butir soal (terenkode, ${Math.round(enc.length / 1024)} KB)`);

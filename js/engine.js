@@ -35,6 +35,21 @@ const E = (() => {
     });
     return el;
   }
+  // untuk menu: aksi dijalankan saat jari DIANGKAT dan tidak bergeser (geser = scroll, bukan memilih)
+  function press(el, fn) {
+    let id = null, sx = 0, sy = 0;
+    const end = () => { id = null; };
+    el.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button !== 0) return; id = e.pointerId; sx = e.clientX; sy = e.clientY; });
+    el.addEventListener('pointermove', e => { if (e.pointerId === id && Math.hypot(e.clientX - sx, e.clientY - sy) > 12) end(); });
+    el.addEventListener('pointerup', e => {
+      if (e.pointerId !== id) return;
+      const ok = Math.hypot(e.clientX - sx, e.clientY - sy) <= 12; end();
+      if (ok) { e.preventDefault(); fn(e); }
+    });
+    el.addEventListener('pointercancel', end);
+    el.addEventListener('click', e => { if (e.detail === 0) fn(e); }); // keyboard (Enter/Spasi)
+    return el;
+  }
   function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
   function lenClass(s, a = 40, b = 80) { s = String(s); return s.length > b ? 'xlong' : s.length > a ? 'long' : ''; }
   function flash(el, cls, ms = 500) { if (!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms); }
@@ -142,5 +157,5 @@ const E = (() => {
     });
   }
 
-  return { after, every, loop, clearAll, h, tap, shuffle, lenClass, flash, halves, qpanel, confetti };
+  return { after, every, loop, clearAll, h, tap, press, shuffle, lenClass, flash, halves, qpanel, confetti };
 })();

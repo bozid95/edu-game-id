@@ -5,7 +5,15 @@ Soal mengacu **Capaian Pembelajaran Kurikulum Merdeka (Kep. Kepala BSKAP No. 046
 dengan pendekatan Pembelajaran Mendalam, untuk **7 jenjang**: SD & MI (kelas 1–6), SMP & MTs (kelas 7–9),
 SMA, MA & SMK (kelas 10–12).
 
-Tanpa instalasi, tanpa internet: cukup buka `index.html` di Chrome/Edge pada TV board.
+Tanpa instalasi: buka `index.html` di Chrome/Edge pada TV board (bisa tanpa internet), atau buka versi website.
+
+### Bisa dipakai tanpa internet (PWA)
+- **Versi website:** buka sekali saat ada internet. Seluruh aplikasi dan bank soal tersimpan di perangkat (service worker),
+  lalu tetap bisa dibuka meski Wi-Fi mati. Pembaruan soal/fitur terunduh otomatis saat online, dengan pemberitahuan "Muat ulang".
+- **Pasang seperti aplikasi:** tombol **📲 Pasang Aplikasi** muncul di beranda pada browser yang mendukung (Chrome/Edge/Android).
+- **Versi file:** salin folder `dist/` (hasil build) ke flashdisk dan buka `index.html`.
+- Font Baloo 2 disimpan di `assets/fonts/` (SIL Open Font License 1.1), jadi tampilan sama meski offline.
+- Yang tetap butuh internet hanya tombol **Hubungi Kami** (WhatsApp).
 
 ## Game
 | Game | Mekanik | Format soal |

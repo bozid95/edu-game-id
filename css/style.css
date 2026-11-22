@@ -1,4 +1,8 @@
 /* ============ ARENA JUARA ============ */
+/* ============ FONT LOKAL: Baloo 2 (SIL Open Font License 1.1, lihat assets/fonts/OFL.txt) ============ */
+@font-face{font-family:'Baloo 2';font-style:normal;font-weight:400 800;font-display:swap;src:url(../assets/fonts/baloo2-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Baloo 2';font-style:normal;font-weight:400 800;font-display:swap;src:url(../assets/fonts/baloo2-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
 :root{
   --red:#ef4444; --red-d:#b91c1c;
   --blue:#2f7cf6; --blue-d:#1d4ed8;
@@ -54,9 +58,9 @@ input{font-family:inherit}
 @keyframes screenIn{from{opacity:0;transform:scale(.98) translateY(1.5vh)}to{opacity:1;transform:none}}
 
 /* bunting (umbul-umbul) */
-.bunting{position:absolute;top:0;left:0;right:0;height:7vh;display:flex;justify-content:space-between;pointer-events:none;filter:drop-shadow(0 .3em .3em rgba(0,0,0,.3))}
+.bunting{position:absolute;top:0;left:0;right:0;height:7vh;opacity:.55;display:flex;justify-content:space-between;pointer-events:none;filter:drop-shadow(0 .3em .3em rgba(0,0,0,.3))}
 .bunting::before{content:"";position:absolute;left:0;right:0;top:.4vh;height:.25em;background:#fff8}
-.bunting span{width:3.4vw;height:6vh;clip-path:polygon(0 0,100% 0,50% 100%);background:var(--red);animation:sway 3s ease-in-out infinite;transform-origin:50% 0}
+.bunting span{width:3.4vw;height:4.2vh;clip-path:polygon(0 0,100% 0,50% 100%);background:var(--red);animation:sway 3s ease-in-out infinite;transform-origin:50% 0}
 .bunting span:nth-child(2n){background:#fff}
 .bunting span:nth-child(3n){animation-delay:-1s}
 .bunting span:nth-child(4n){animation-delay:-2s}
@@ -64,12 +68,16 @@ input{font-family:inherit}
 
 /* home */
 .home{align-items:center;justify-content:center;text-align:center}
-.home-center{display:flex;flex-direction:column;align-items:center;gap:3vh}
+.home-center{display:flex;flex-direction:column;align-items:center;gap:2.2vh;padding-bottom:4vh}
 .logo{display:flex;flex-direction:column;line-height:.85;font-weight:800;letter-spacing:.02em}
-.logo .l1{font-size:6em;color:#fff;text-shadow:0 .08em 0 #7c4dff,0 .16em 0 #4a22b8,0 .3em .4em rgba(0,0,0,.4)}
-.logo .l2{font-size:9em;color:var(--yellow);text-shadow:0 .06em 0 #ff8a00,0 .12em 0 #c2410c,0 .25em .4em rgba(0,0,0,.45);animation:float 3s ease-in-out infinite}
+.logo .l1{font-size:5em;color:#fff;text-shadow:0 .08em 0 #7c4dff,0 .16em 0 #4a22b8,0 .3em .4em rgba(0,0,0,.4)}
+.logo .l2{font-size:7.6em;color:var(--yellow);text-shadow:0 .06em 0 #ff8a00,0 .12em 0 #c2410c,0 .25em .4em rgba(0,0,0,.45);animation:float 3s ease-in-out infinite}
 @keyframes float{50%{transform:translateY(-1.2vh) rotate(-1deg)}}
-.tag{font-size:1.7em;opacity:.95;max-width:50em}
+.tag{font-size:1.9em;font-weight:700;max-width:50em;margin-top:1vh;line-height:1.25}
+.home-meta{font-size:1.15em;opacity:.65;letter-spacing:.02em;margin-top:-1vh;margin-bottom:1.5vh}
+.home-actions{display:flex;gap:1em;flex-wrap:wrap;justify-content:center;margin-top:1vh}
+.btn3d.ghost{--c:rgba(255,255,255,.08);--cd:rgba(0,0,0,.25);--fg:#fff;font-size:1.25em;padding:.55em 1.3em;border:.1em solid rgba(255,255,255,.3);box-shadow:none}
+.btn3d.ghost:active{transform:scale(.97);box-shadow:none;background:rgba(255,255,255,.16)}
 .vs-badges{display:flex;align-items:center;gap:1em;font-size:1.6em}
 .vs-badges b{font-size:1.8em;color:var(--yellow);text-shadow:0 .1em 0 #c2410c}
 .pill{padding:.25em 1em;border-radius:2em;font-weight:800;box-shadow:0 .2em 0 rgba(0,0,0,.25)}
@@ -386,7 +394,7 @@ canvas.confetti{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 .qtxt{flex:1;font-size:1.15em;line-height:1.25;min-width:0;overflow-wrap:anywhere}
 pre.help{background:rgba(0,0,0,.3);padding:.7em;border-radius:.6em;font-size:1.05em;white-space:pre-wrap;line-height:1.4;user-select:text}
 .btn3d.big-ish{font-size:1.8em}
-.home-center .btn3d.white{font-size:1.5em}
+
 
 /* ===================== LAYOUT 3 KOLOM (papan di tengah) ===================== */
 .halves.with-center::after{display:none}
@@ -613,7 +621,9 @@ pre.help{background:rgba(0,0,0,.3);padding:.7em;border-radius:.6em;font-size:1.0
   /* beranda */
   .logo .l1{font-size:4.6em}.logo .l2{font-size:6.6em}
   .home-center{gap:2.4vh;padding-bottom:9vh}
-  .home .tag{font-size:1.15em;padding:0 2vw}
+  .home .tag{font-size:1.45em;padding:0 2vw}
+  .home-meta{font-size:.95em;padding:0 4vw}
+  .home .btn3d.big{font-size:2.3em}
   .vs-badges{font-size:1.15em;gap:.5em;flex-wrap:nowrap}
   .vs-badges .pill{white-space:nowrap;padding:.3em .8em}
   .home-foot{bottom:5.6em;padding:0 6vw;font-size:.82em;opacity:.6}
@@ -666,3 +676,7 @@ pre.help{background:rgba(0,0,0,.3);padding:.7em;border-radius:.6em;font-size:1.0
   #globalBtns #btnContact{width:3.2em;padding:0;justify-content:center;border-radius:50%}
   .home-foot{display:none}
 }
+
+/* ---------- notifikasi kecil (PWA) ---------- */
+.toast{position:fixed;left:50%;bottom:9vh;transform:translateX(-50%);z-index:300;display:flex;align-items:center;gap:.8em;background:#fff;color:var(--ink);padding:.6em .8em .6em 1.2em;border-radius:1em;box-shadow:0 .5em 1.5em rgba(0,0,0,.4);font-weight:700;font-size:1.15em;max-width:92vw;animation:screenIn .3s}
+.toast .btn3d{font-size:.85em;flex:none}

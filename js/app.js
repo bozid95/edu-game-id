@@ -2,7 +2,7 @@
    APP – menu: Beranda → Jenjang → Kelas → Mapel → Game → Main
    ============================================================ */
 const App = (() => {
-  const { h, tap } = E;
+  const { h } = E, tap = E.press; // menu: pilih saat jari diangkat, agar scroll tidak ikut memilih
   const root = document.getElementById('app');
   const JENJANG = {
     SD: { name: 'SD', full: 'Sekolah Dasar', kelas: [1, 2, 3, 4, 5, 6], icon: '🎒', sub: 'Kelas 1–6 · Fase A, B, C', c: ['#ff9f1c', '#ff5e5b'] },
@@ -48,17 +48,15 @@ const App = (() => {
   function home() {
     const el = h('div', { class: 'screen home' });
     el.append(h('div', { class: 'bunting' }, Array.from({ length: 26 }, () => h('span'))));
-    const fl = h('div', { class: 'floaters' });
-    [['📚', 8, 25], ['✏️', 85, 20], ['🔬', 12, 70], ['🌏', 88, 65], ['🧮', 50, 85], ['🏆', 75, 40], ['🎨', 25, 45]].forEach(([e, x, y], i) =>
-      fl.append(h('span', { style: `left:${x}%;top:${y}%;animation-delay:${-i * .7}s` }, e)));
-    el.append(fl);
+    const sec = h('div', { class: 'home-actions' },
+      btn(`📝 Bank Soal Guru${Guru.count() ? ` (${Guru.count()})` : ''}`, 'ghost', () => Guru.list(guruApi)),
+      installEvt ? installBtn() : null);
     el.append(h('div', { class: 'home-center' },
       h('div', { class: 'logo' }, h('span', { class: 'l1' }, 'ARENA'), h('span', { class: 'l2' }, 'JUARA')),
-      h('p', { class: 'tag' }, `${GAMES.length} game edukasi versus untuk layar sentuh kelas · SD/MI · SMP/MTs · SMA/MA · SMK`),
-      btn('▶ MAIN SEKARANG', 'big', jenjang),
-      btn(`📝 Buat Bank Soal Sendiri${Guru.count() ? ` (${Guru.count()})` : ''}`, 'white', () => Guru.list(guruApi)),
-      h('div', { class: 'vs-badges' }, h('span', { class: 'pill red' }, avatarEl(TEAM[0].ic), S.teams[0]), h('b', {}, 'VS'), h('span', { class: 'pill blue' }, avatarEl(TEAM[1].ic), S.teams[1]))
-    ));
+      h('p', { class: 'tag' }, 'Game edukasi versus dua tim untuk kelas'),
+      h('p', { class: 'home-meta' }, `${GAMES.length} game · 25.000+ soal · SD/MI · SMP/MTs · SMA/MA · SMK`),
+      btn('▶ Main Sekarang', 'big', jenjang),
+      sec));
     el.append(h('div', { class: 'home-foot' }, 'Soal mengacu Capaian Pembelajaran Kurikulum Merdeka (BSKAP No. 046/H/KR/2025) · Pembelajaran Mendalam'));
     show(el);
   }
@@ -379,6 +377,35 @@ const App = (() => {
   });
   tap(document.getElementById('btnContact'), () => { SFX.click(); contact(); });
   document.addEventListener('pointerdown', () => SFX.unlock(), { once: true });
+
+  /* ---------- PWA: bisa dibuka tanpa internet + pasang seperti aplikasi ---------- */
+  function toast(msg, action, fn) {
+    document.querySelectorAll('.toast').forEach(t => t.remove());
+    const t = h('div', { class: 'toast', role: 'status' }, h('span', {}, msg), action ? btn(action, 'yellow small', () => { t.remove(); fn(); }) : null, btn('✕', 'white small', () => t.remove()));
+    document.body.append(t);
+    if (!action) setTimeout(() => t.remove(), 7000);
+  }
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener('load', () => {
+      const firstTime = !navigator.serviceWorker.controller;
+      navigator.serviceWorker.register('sw.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+          const sw = reg.installing; if (!sw) return;
+          sw.addEventListener('statechange', () => {
+            if (sw.state !== 'activated') return;
+            if (firstTime) toast('✅ Arena Juara sudah tersimpan di perangkat ini dan bisa dibuka tanpa internet.');
+            else if (!document.body.classList.contains('game-active')) toast('🔄 Versi baru (soal & fitur) sudah terunduh.', 'Muat ulang', () => location.reload());
+          });
+        });
+      }).catch(() => {});
+    });
+  }
+  let installEvt = null;
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; const hc = document.querySelector('.home-actions'); if (hc && !hc.querySelector('.install-btn')) hc.append(installBtn()); });
+  window.addEventListener('appinstalled', () => { installEvt = null; document.querySelectorAll('.install-btn').forEach(b => b.remove()); toast('📲 Arena Juara sudah terpasang di perangkat ini.'); });
+  function installBtn() {
+    return btn('📲 Pasang Aplikasi', 'ghost install-btn', () => { if (!installEvt) return; installEvt.prompt(); installEvt.userChoice.finally(() => { installEvt = null; document.querySelectorAll('.install-btn').forEach(b => b.remove()); }); });
+  }
   document.addEventListener('contextmenu', e => e.preventDefault());
 
   return { home };

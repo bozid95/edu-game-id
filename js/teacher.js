@@ -3,7 +3,7 @@
    Disimpan di perangkat (localStorage) + ekspor/impor file .json
    ============================================================ */
 const Guru = (() => {
-  const { h, tap } = E;
+  const { h } = E, tap = E.press;
   const KEY = 'aj_custom';
   let sets = [];
   try { sets = JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { sets = []; }
