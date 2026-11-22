@@ -30,6 +30,7 @@ const Guru = (() => {
     const out = { mc: [], tf: [], pair: [], ord: [] }, bad = [];
     text.split(/\r?\n/).forEach((line, i) => {
       const L = line.trim(); if (!L || L.startsWith('#')) return;
+      if (/^(NAMA|KELAS|GURU)\s*:/i.test(L)) return; // baris info paket (templat .txt)
       const m = L.match(/^(PG|BS|PS|UR)\s*[:.]\s*(.+)$/i);
       if (!m) { bad.push(i + 1); return; }
       const kind = m[1].toUpperCase(), body = m[2];
@@ -51,7 +52,8 @@ const Guru = (() => {
 
   /* ---------- file ---------- */
   function download(name, data) {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const isTxt = typeof data === 'string';
+    const blob = new Blob([isTxt ? '﻿' + data : JSON.stringify(data, null, 2)], { type: isTxt ? 'text/plain;charset=utf-8' : 'application/json' });
     const a = h('a', { href: URL.createObjectURL(blob), download: name });
     document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   }
@@ -65,8 +67,12 @@ const Guru = (() => {
         try {
           const txt = String(rd.result);
           if (/\.txt$/i.test(f.name)) {
-            const { out } = parseQuick(txt);
-            sets.push(normalize({ name: f.name.replace(/\.txt$/i, ''), kelas: [], ...out })); added = 1;
+            const { out, bad } = parseQuick(txt.replace(/^﻿/, ''));
+            // baris opsional di templat: "NAMA: ...", "KELAS: 4, 5", "GURU: ..."
+            const meta = k => { const m = txt.match(new RegExp('^\\s*' + k + '\\s*:\\s*(.+)$', 'im')); return m ? clean(m[1]) : ''; };
+            const kelas = (meta('KELAS').match(/\d+/g) || []).map(Number);
+            sets.push(normalize({ name: meta('NAMA') || f.name.replace(/\.txt$/i, ''), author: meta('GURU'), kelas, ...out })); added = 1;
+            if (bad.length) alert(`Catatan: baris ${bad.join(', ')} tidak terbaca dan dilewati. Periksa awalan PG:/BS:/PS:/UR: pada baris tersebut.`);
           } else {
             const data = JSON.parse(txt);
             const list = Array.isArray(data) ? data : (data.paket || [data]);
@@ -81,18 +87,132 @@ const Guru = (() => {
     document.body.append(inp); inp.click(); setTimeout(() => inp.remove(), 60000);
   }
 
+  /* ---------- templat & panduan ---------- */
+  const TEMPLATE = [
+    '# ===== TEMPLAT SOAL ARENA JUARA =====',
+    '# Baris yang diawali tanda # adalah catatan dan tidak dibaca.',
+    '# Isi 3 baris info di bawah, lalu ganti contoh soal dengan soal Anda.',
+    '# Simpan sebagai .txt (Notepad: File > Save As > Encoding UTF-8), lalu Impor File di Bank Soal Guru.',
+    '',
+    'NAMA: Ekosistem Kelas 5',
+    'KELAS: 5',
+    'GURU: Bu Sari',
+    '',
+    '# --- PILIHAN GANDA ---  PG: soal | jawaban BENAR | pengecoh 1 | pengecoh 2 | pengecoh 3',
+    'PG: Makhluk hidup yang dapat membuat makanan sendiri disebut... | Produsen | Konsumen | Pengurai | Predator',
+    'PG: Contoh hewan pemakan tumbuhan adalah... | Kambing | Harimau | Elang | Ular',
+    'PG: Jamur dan bakteri dalam ekosistem berperan sebagai... | Pengurai | Produsen | Konsumen | Pemangsa',
+    '',
+    '# --- BENAR / SALAH ---  BS: pernyataan | B   (atau S)',
+    'BS: Tumbuhan hijau termasuk produsen | B',
+    'BS: Harimau termasuk herbivora | S',
+    '',
+    '# --- PASANGAN (3-5 pasang per baris) ---  PS: kiri = kanan ; kiri = kanan ; ...',
+    'PS: Produsen = Padi ; Konsumen I = Tikus ; Konsumen II = Ular ; Pengurai = Jamur',
+    '',
+    '# --- URUTAN (2-6 langkah, tulis sesuai urutan BENAR) ---  UR: instruksi | langkah 1 ; langkah 2 ; ...',
+    'UR: Urutkan rantai makanan | Padi ; Tikus ; Ular ; Elang',
+    ''
+  ].join('\n');
+
+  function guide(api, back) {
+    const sec = (ic, title, ...body) => h('section', { class: 'gd-sec' }, h('h3', {}, ic + ' ' + title), ...body);
+    const p = t => h('p', {}, t);
+    const ul = items => h('ul', {}, items.map(t => h('li', {}, t)));
+    const ol = items => h('ol', {}, items.map(t => h('li', {}, t)));
+    const code = t => h('pre', { class: 'help' }, t);
+    const tbl = (head, rows) => h('table', { class: 'gd-tbl' }, h('tr', {}, head.map(x => h('th', {}, x))), rows.map(r => h('tr', {}, r.map(x => h('td', {}, x)))));
+    const nav = h('div', { class: 'gd-nav' });
+    const body = h('div', { class: 'gd' }, nav,
+      sec('🚀', 'Langkah cepat (5 menit)', ol([
+        'Di beranda, ketuk 📝 Bank Soal Guru → ➕ Buat Paket Soal.',
+        'Isi Nama paket (mis. “Ekosistem Kelas 5”), nama Anda, lalu pilih kelas. Boleh lebih dari satu kelas.',
+        'Tambah soal lewat tab 🅰 Pilihan Ganda, ✔✘ Benar/Salah, 🧩 Pasangan, 🔢 Urutan, atau tempel sekaligus di ⚡ Tempel Cepat.',
+        'Ketuk 💾 Simpan paket.',
+        'Ketuk ▶ Main pada kartu paket, pilih game, atur waktu & target, lalu MULAI.',
+        'Paket juga muncul sebagai mapel ✏️ di bagian “Guru & Campuran” saat memilih jenjang → kelas yang sesuai.'
+      ])),
+      sec('🧩', 'Empat jenis soal & game yang memakainya',
+        tbl(['Jenis', 'Isi', 'Dipakai di game'], [
+          ['🅰 Pilihan Ganda', 'Soal + 1 jawaban benar + 1–3 pengecoh. Pilihan diacak otomatis.', 'Tarik Tambang, Balap Karung, Tangkap Gelembung, Ular Tangga, XOX, Pukul Tikus, Cerdas Cermat, Menara'],
+          ['✔✘ Benar/Salah', 'Pernyataan + kunci Benar atau Salah.', 'Bom Waktu, Cerdas Cermat, Menara'],
+          ['🧩 Pasangan', '1 set = 3–5 pasang (istilah ↔ arti). Isi kanan tidak boleh kembar.', 'Cocok Kilat, Kartu Ingat'],
+          ['🔢 Urutan', 'Instruksi + 2–6 langkah ditulis sesuai urutan BENAR. Game yang mengacak.', 'Panjat Pinang'],
+          ['🎈 (otomatis)', 'Soal PG yang jawabannya SATU kata huruf saja (3–12 huruf, tanpa spasi/angka).', 'Tebak Kata Balon']
+        ]),
+        p('Tidak wajib mengisi semua jenis. Jika satu jenis kosong, game memakai pengganti: Benar/Salah dibuat dari PG, pasangan dibuat dari PG berjawaban pendek, dan sebaliknya. Agar hasilnya paling bagus, isi jenis yang sesuai game yang ingin dimainkan.')),
+      sec('⚡', 'Tempel Cepat: menyiapkan soal di Word / Excel / Notepad',
+        p('Satu soal per baris, diawali kode jenisnya. Pemisah: | (garis tegak) antarbagian, ; (titik koma) antarpasangan/langkah, = untuk pasangan kiri–kanan.'),
+        code('PG: Ibu kota Jawa Barat adalah... | Bandung | Semarang | Surabaya | Serang\n' +
+          'BS: Matahari terbit dari timur | B\n' +
+          'BS: Ikan bernapas dengan paru-paru | S\n' +
+          'PS: Akar = menyerap air ; Daun = fotosintesis ; Batang = menopang\n' +
+          'UR: Urutkan daur air | Penguapan ; Pengembunan ; Hujan\n' +
+          '# baris catatan diawali # tidak dibaca'),
+        ul([
+          'PG: bagian kedua SELALU jawaban benar. Urutan pilihan di layar diacak, jadi tidak perlu khawatir jawaban selalu di posisi A.',
+          'BS: tulis B / Benar / Ya untuk benar; selain itu dianggap salah.',
+          'Tombol ✅ Terapkan MENGGANTI semua soal di paket dengan isi kotak. Isi kotak sudah berisi soal lama, jadi cukup tambahkan baris baru di bawahnya.',
+          'Setelah Terapkan muncul ringkasan jumlah soal terbaca dan nomor baris yang salah format.',
+          'Tanda | dan ; jangan dipakai di dalam teks soal.'
+        ]),
+        h('p', {}, h('b', {}, 'Excel: '), 'buat kolom A = Soal, B = Jawaban benar, C–E = Pengecoh. Di kolom F ketik rumus ',
+          h('code', {}, '="PG: "&A2&" | "&B2&" | "&C2&" | "&D2&" | "&E2'), ', tarik ke bawah, salin kolom F, lalu tempel ke kotak Tempel Cepat.'),
+        h('p', {}, h('b', {}, 'File templat: '), 'ketuk 📄 Unduh Templat .txt di bawah, isi di Notepad (baris NAMA:, KELAS:, GURU: ikut terbaca), simpan, lalu ', h('b', {}, '📂 Impor File'), '. Paket langsung jadi tanpa mengetik ulang di TV.')),
+      sec('✅', 'Tips membuat soal yang seru dan adil', ul([
+        'Jumlah ideal per paket: minimal 15–20 PG dan 10 Benar/Salah. Satu ronde game memakai 10–40 soal; soal yang kurang akan diulang.',
+        'Tulis singkat (maks. ±120 huruf) agar terbaca dari belakang kelas dan cepat dijawab saat balapan.',
+        'Pengecoh harus masuk akal dan sejenis dengan jawaban (semua nama kota, semua angka, dll.), dengan panjang yang mirip.',
+        'Hindari pilihan “semua benar” atau “A dan B”, karena pilihan diacak.',
+        'Benar/Salah: buat seimbang antara pernyataan benar dan salah; hindari kata mutlak seperti “selalu/tidak pernah” yang mudah ditebak.',
+        'Pasangan: isi kiri dan kanan pendek (1–4 kata), karena tampil sebagai kartu.',
+        'Untuk Tebak Kata, buat beberapa PG yang jawabannya satu kata, mis. “Organ pemompa darah adalah...” → JANTUNG.',
+        'Pakai kata kerja HOTS sesekali (bandingkan, simpulkan, mengapa) agar tidak sekadar hafalan, selaras Pembelajaran Mendalam.'
+      ])),
+      sec('💾', 'Menyimpan, mencadangkan, memindahkan', ul([
+        'Paket tersimpan otomatis di browser TV/laptop ini. Membersihkan data browser atau memakai mode Incognito akan menghapusnya.',
+        '💾 Ekspor Semua = cadangan semua paket ke satu file .json (simpan di flashdisk/Drive). Ikon 💾 di kartu = ekspor satu paket.',
+        'Di perangkat lain: buka Arena Juara → Bank Soal Guru → 📂 Impor File → pilih file .json atau .txt.',
+        'Impor paket yang sama dua kali akan memperbarui paket lama, tidak menggandakan.',
+        'Berbagi antarguru: kirim file .json lewat WhatsApp/Drive, guru lain tinggal Impor.'
+      ])),
+      sec('❓', 'Masalah yang sering terjadi',
+        tbl(['Masalah', 'Penyebab & solusi'], [
+          ['Tombol ▶ Main tidak muncul', 'Paket belum memilih kelas atau belum berisi soal. Ketuk ✏️ Ubah.'],
+          ['Paket tidak muncul di daftar mapel', 'Pilih kelas yang sama dengan kelas paket. Paket ada di kelompok “Guru & Campuran”.'],
+          ['Baris tidak terbaca di Tempel Cepat', 'Awalan harus PG:, BS:, PS:, atau UR: diikuti teks. PG perlu minimal soal | jawaban. PS minimal 2 pasang dengan tanda =.'],
+          ['Panjat Pinang memakai soal lain', 'Paket belum punya soal Urutan, sehingga diambil soal urutan bawaan/otomatis. Tambahkan soal di tab 🔢 Urutan.'],
+          ['Huruf aneh (Ã©, â€) setelah impor .txt', 'Simpan file .txt dengan Encoding UTF-8.'],
+          ['Soal hilang setelah browser diperbarui/dibersihkan', 'Impor kembali file cadangan .json. Biasakan Ekspor setelah membuat soal.']
+        ]))
+    );
+    // navigasi cepat antarbagian
+    body.querySelectorAll('.gd-sec').forEach(s => {
+      const b = h('button', { class: 'chip wide' }, s.querySelector('h3').textContent);
+      tap(b, () => s.scrollIntoView({ behavior: 'smooth', block: 'start' })); nav.append(b);
+    });
+    body.append(h('div', { class: 'row gd-foot' },
+      api.btn('📄 Unduh Templat .txt', 'blue', () => download('templat-soal-arena-juara.txt', TEMPLATE)),
+      api.btn('➕ Buat Paket Soal', 'green', () => editor(api, null)),
+      api.btn('◀ Kembali', 'white', back)));
+    api.show(api.menu('Panduan Membuat Soal', ['Bank Soal Guru'], back, body));
+  }
+
   /* ---------- layar daftar paket ---------- */
   function list(api) {
     const wrap = h('div', { class: 'guru' });
     const bar = h('div', { class: 'guru-bar' },
       api.btn('➕ Buat Paket Soal', 'green', () => editor(api, null)),
       api.btn('📂 Impor File', 'blue', () => importFile(() => list(api))),
+      api.btn('📘 Panduan', 'white', () => guide(api, () => list(api))),
+      api.btn('📄 Templat .txt', 'white', () => download('templat-soal-arena-juara.txt', TEMPLATE)),
       sets.length ? api.btn('💾 Ekspor Semua', 'white', () => download('arena-juara-soal-guru.json', { app: 'Arena Juara', versi: 1, paket: sets })) : null);
     wrap.append(bar);
     if (!sets.length) {
       wrap.append(h('div', { class: 'guru-empty' }, h('div', { class: 'big-ic' }, '📝'),
         h('h3', {}, 'Belum ada paket soal buatan guru'),
-        h('p', {}, 'Buat paket soal sendiri sesuai materi di kelas Anda. Paket yang dibuat akan muncul sebagai mata pelajaran baru (✏️) dan dapat dimainkan di semua game.')));
+        h('p', {}, 'Buat paket soal sendiri sesuai materi di kelas Anda. Paket yang dibuat akan muncul sebagai mata pelajaran baru (✏️) dan dapat dimainkan di semua game.'),
+        h('div', { class: 'row', style: 'justify-content:center;margin-top:2vh' }, api.btn('📘 Baca Panduan dulu', 'blue', () => guide(api, () => list(api))))));
     } else {
       const g = h('div', { class: 'grid' });
       sets.forEach(s => {
@@ -130,7 +250,7 @@ const Guru = (() => {
       chips.append(c);
     }
     const quickSel = h('div', { class: 'chips' },
-      ...[['SD', [1, 2, 3, 4, 5, 6]], ['SMP', [7, 8, 9]], ['SMK', [10, 11, 12]]].map(([l, ks]) => {
+      ...[['SD/MI', [1, 2, 3, 4, 5, 6]], ['SMP/MTs', [7, 8, 9]], ['SMA/MA/SMK', [10, 11, 12]]].map(([l, ks]) => {
         const b = h('button', { class: 'chip wide' }, 'Semua ' + l);
         tap(b, () => { d.kelas = [...new Set([...d.kelas, ...ks])].sort((a, b) => a - b); [...chips.children].forEach((c, i) => c.classList.toggle('on', d.kelas.includes(i + 1))); });
         return b;
@@ -228,7 +348,7 @@ const Guru = (() => {
     };
     const tips = h('div', { class: 'guru-tips' },
       '💡 Saran: minimal 10 soal PG agar game tidak cepat berulang. Pasangan dipakai di Cocok Kilat & Kartu Ingat, Urutan di Panjat Pinang, jawaban satu kata di Tebak Kata. Jika format tertentu kosong, game memakai soal PG/BS sebagai gantinya.');
-    root.append(h('div', { class: 'guru-cols' }, h('div', { class: 'guru-left' }, meta, tips, h('div', { class: 'row' }, api.btn('💾 Simpan paket', 'green big-ish', save), api.btn('Batal', 'white', () => list(api)))),
+    root.append(h('div', { class: 'guru-cols' }, h('div', { class: 'guru-left' }, meta, tips, h('div', { class: 'row' }, api.btn('💾 Simpan paket', 'green big-ish', save), api.btn('📘 Panduan', 'white small', () => guide(api, () => editor(api, d))), api.btn('Batal', 'white', () => list(api)))),
       h('div', { class: 'guru-right' }, tabs, pane)));
     api.show(api.menu(src ? 'Ubah Paket Soal' : 'Buat Paket Soal', ['Bank Soal Guru'], () => list(api), root));
   }

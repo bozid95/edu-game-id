@@ -1,0 +1,25 @@
+{
+  "name": "Arena Juara – Game Edukasi Versus",
+  "short_name": "Arena Juara",
+  "description": "Game edukasi versus 2 tim untuk TV layar sentuh di kelas, Kurikulum Merdeka SD sampai SMA/SMK.",
+  "lang": "id",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#2a1470",
+  "theme_color": "#4c22b5",
+  "categories": [
+    "education",
+    "games",
+    "kids"
+  ],
+  "icons": [
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

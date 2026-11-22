@@ -137,12 +137,35 @@ const MathGen = (() => {
     12: ['limit', 'turunan', 'integral', 'integralTentu', 'det2', 'median', 'rataRata', 'permutasi']
   };
 
+  // label materi untuk filter bab Matematika
+  const TOPIC = {
+    add20: 'Penjumlahan s.d. 20', sub20: 'Pengurangan s.d. 20', before: 'Bilangan sebelum/sesudah', after: 'Bilangan sebelum/sesudah', count: 'Membilang benda',
+    add100: 'Penjumlahan s.d. 100', sub100: 'Pengurangan s.d. 100', mul5: 'Perkalian dasar', mul10: 'Perkalian', div10: 'Pembagian',
+    add1000: 'Penjumlahan ribuan', sub1000: 'Pengurangan ribuan', mul2d: 'Perkalian bersusun', kelilingPP: 'Keliling bangun datar', luasPP: 'Luas bangun datar',
+    round10: 'Pembulatan', fracEq: 'Pecahan senilai', fracAdd: 'Operasi pecahan', dec: 'Desimal', kpk: 'KPK', fpb: 'FPB', luasSeg: 'Luas segitiga',
+    persen: 'Persen', kuadrat: 'Kuadrat', akar: 'Akar kuadrat', volKubus: 'Volume kubus & balok', volBalok: 'Volume kubus & balok',
+    negAdd: 'Bilangan bulat', negSub: 'Bilangan bulat', negMul: 'Bilangan bulat', linEq: 'Persamaan linear', perbandingan: 'Perbandingan',
+    pyth: 'Teorema Pythagoras', fx: 'Fungsi', gradien: 'Gradien garis lurus', pangkat: 'Perpangkatan', tabung: 'Bangun ruang sisi lengkung',
+    rataRata: 'Statistika (rata-rata)', median: 'Statistika (median)', modus: 'Statistika (modus)', spldv: 'SPLDV',
+    eksponen: 'Eksponen', eksponen2: 'Eksponen', eksponen3: 'Eksponen', log: 'Logaritma', logSifat: 'Logaritma',
+    aritmetika: 'Barisan aritmetika', geometri: 'Barisan geometri', deret: 'Deret aritmetika', quadVal: 'Fungsi kuadrat',
+    peluangDadu: 'Peluang', peluangKoin: 'Peluang', permutasi: 'Kaidah pencacahan', kombinasi: 'Kaidah pencacahan',
+    trig: 'Trigonometri', det2: 'Matriks', vektor: 'Vektor', komposisi: 'Komposisi fungsi', limit: 'Limit', turunan: 'Turunan',
+    integral: 'Integral', integralTentu: 'Integral'
+  };
+  const levelFor = k => (k >= 10 && typeof QB !== 'undefined' && QB.jenjang && ['SMA', 'MA'].includes(QB.jenjang()) ? LEVEL_SMA[k] : null) || LEVEL[k];
+  function topics(kelas) {
+    const k = Math.max(1, Math.min(12, kelas)), seen = [];
+    levelFor(k).forEach(g => { const l = TOPIC[g] || g; if (!seen.includes(l)) seen.push(l); });
+    return seen.map(l => ({ id: l, label: l, n: '∞' }));
+  }
+
   function make(kelas) {
     const k = Math.max(1, Math.min(12, kelas));
-    const sma = k >= 10 && typeof QB !== 'undefined' && QB.jenjang && ['SMA', 'MA'].includes(QB.jenjang());
-    const L = sma ? LEVEL_SMA : LEVEL;
-    let pool = L[k] || LEVEL[k];
-    if (k > 1 && Math.random() < 0.25) pool = L[k - 1] || LEVEL[k - 1];
+    let pool = levelFor(k);
+    const sel = typeof QB !== 'undefined' && QB.selTopics ? QB.selTopics(k, 'Matematika') : null;
+    if (sel) { const f = pool.filter(g => sel.includes(TOPIC[g] || g)); if (f.length) pool = f; }
+    else if (k > 1 && Math.random() < 0.25) pool = levelFor(k - 1); // sesekali ulang materi kelas sebelumnya
     const g = G[pick(pool)]();
     const as = fmt(g.a);
     let d = g.d ? g.d.filter(x => x !== as) : near(g.a);
@@ -194,5 +217,5 @@ const MathGen = (() => {
     return out;
   }
 
-  return { make, ord, pair, fmt };
+  return { make, ord, pair, fmt, topics };
 })();

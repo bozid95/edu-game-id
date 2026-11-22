@@ -17,8 +17,17 @@ const App = (() => {
   const setJ = k => { S.jenjang = k; QB.setJenjang(k); };
   const PILIHAN = ['Fisika', 'Kimia', 'Biologi', 'Ekonomi', 'Sosiologi', 'Geografi', 'Antropologi', 'Koding & KA', 'PKK (Kewirausahaan)', 'Projek IPAS', 'K3 & Budaya Kerja', 'Informatika & KA'];
   const S = { jenjang: null, kelas: null, mapel: null, teams: ['Tim Merah', 'Tim Biru'] };
-  try { const t = JSON.parse(localStorage.getItem('aj_teams')); if (Array.isArray(t) && t.length === 2) S.teams = t; } catch (e) {}
-  const saveTeams = () => { try { localStorage.setItem('aj_teams', JSON.stringify(S.teams)); } catch (e) {} };
+  /* tim: maskot + nama + anggota (opsional) + skor seri pertandingan */
+  const MASKOT = ['🐯', '🦅', '🦁', '🐉', '🦈', '🐺', '🦊', '🐼', '🦄', '🐘', '🦖', '🐝', '🚀', '⚡', '🔥', '🌟', '🌊', '🍉'];
+  const NAMA_ACAK = ['Garuda', 'Harimau Sakti', 'Komodo', 'Elang Jawa', 'Badak Cula', 'Anoa', 'Cendrawasih', 'Bintang Timur', 'Pelangi', 'Halilintar',
+    'Rajawali', 'Ksatria', 'Pejuang Ilmu', 'Si Cerdas', 'Juara Sejati', 'Kilat', 'Matahari', 'Merapi', 'Samudra', 'Nusantara', 'Pendekar', 'Macan Tutul'];
+  let TEAM = [{ ic: 'harimau', name: 'Tim Merah', members: '' }, { ic: 'burunghantu', name: 'Tim Biru', members: '' }], SERIES = [0, 0];
+  try { const t = JSON.parse(localStorage.getItem('aj_team2')); if (Array.isArray(t.team) && t.team.length === 2) { TEAM = t.team; SERIES = t.series || [0, 0]; } } catch (e) {}
+  // ic = id karakter SVG (Avatar) atau emoji; emoji ikut tampil di nama tim dalam game
+  const syncTeams = () => { S.teams = TEAM.map(t => (t.ic && !Avatar.isAvatar(t.ic) ? t.ic + ' ' : '') + (t.name || 'Tim')); };
+  const avatarEl = (ic, cls) => { const s = h('span', { class: 'av ' + (cls || '') }); if (Avatar.isAvatar(ic)) s.innerHTML = Avatar.svg(ic); else { s.textContent = ic || '⭐'; s.classList.add('emo'); } return s; };
+  const saveTeams = () => { syncTeams(); try { localStorage.setItem('aj_team2', JSON.stringify({ team: TEAM, series: SERIES })); } catch (e) {} };
+  syncTeams();
 
   function show(el) { E.clearAll(); document.body.classList.remove('game-active'); root.innerHTML = ''; root.append(el); }
   function btn(label, cls, fn) { const b = h('button', { class: 'btn3d ' + (cls || '') }, label); tap(b, () => { SFX.click(); fn(); }); return b; }
@@ -47,8 +56,8 @@ const App = (() => {
       h('div', { class: 'logo' }, h('span', { class: 'l1' }, 'ARENA'), h('span', { class: 'l2' }, 'JUARA')),
       h('p', { class: 'tag' }, `${GAMES.length} game edukasi versus untuk layar sentuh kelas · SD/MI · SMP/MTs · SMA/MA · SMK`),
       btn('▶ MAIN SEKARANG', 'big', jenjang),
-      btn(`📝 Bank Soal Guru${Guru.count() ? ` (${Guru.count()})` : ''}`, 'white', () => Guru.list(guruApi)),
-      h('div', { class: 'vs-badges' }, h('span', { class: 'pill red' }, S.teams[0]), h('b', {}, 'VS'), h('span', { class: 'pill blue' }, S.teams[1]))
+      btn(`📝 Buat Bank Soal Sendiri${Guru.count() ? ` (${Guru.count()})` : ''}`, 'white', () => Guru.list(guruApi)),
+      h('div', { class: 'vs-badges' }, h('span', { class: 'pill red' }, avatarEl(TEAM[0].ic), S.teams[0]), h('b', {}, 'VS'), h('span', { class: 'pill blue' }, avatarEl(TEAM[1].ic), S.teams[1]))
     ));
     el.append(h('div', { class: 'home-foot' }, 'Soal mengacu Capaian Pembelajaran Kurikulum Merdeka (Kep. Kepala BSKAP No. 046/H/KR/2025) dengan pendekatan Pembelajaran Mendalam'));
     show(el);
@@ -105,16 +114,103 @@ const App = (() => {
 
   /* ---------- pilih game ---------- */
   function games() {
-    const inputs = [0, 1].map(t => {
-      const i = h('input', { class: 't' + t, value: S.teams[t], maxlength: '16' });
-      i.addEventListener('input', () => { S.teams[t] = i.value.trim() || (t ? 'Tim Biru' : 'Tim Merah'); saveTeams(); });
-      return i;
-    });
-    const setup = h('div', { class: 'team-setup' }, inputs[0], h('b', {}, 'VS'), inputs[1]);
+    const setup = teamSetup();
     const g = h('div', { class: 'grid', style: 'grid-template-columns:repeat(auto-fit,minmax(20em,1fr))' });
     GAMES.forEach(gm => g.append(card({ icon: gm.icon, title: gm.name, p: gm.desc, c: gm.c, tags: gm.tags }, () => match(gm))));
-    const body = h('div', { style: 'display:flex;flex-direction:column;min-height:0' }, setup, g);
+    const body = h('div', { style: 'display:flex;flex-direction:column;min-height:0' }, materiBar(), setup, g);
     show(menu('Pilih Permainan', [JENJANG[S.jenjang].name, `Kelas ${S.kelas}`, S.mapel], mapel, body));
+  }
+
+  /* ---------- pengaturan tim: maskot, nama, anggota, skor seri ---------- */
+  function teamSetup() {
+    const wrap = h('div', { class: 'team-setup2' });
+    const draw = () => {
+      wrap.innerHTML = '';
+      const card = t => {
+        const T = TEAM[t];
+        const ic = h('button', { class: 'ts-ic', title: 'Pilih avatar' }, avatarEl(T.ic), h('i', {}, '✏️'));
+        tap(ic, () => { SFX.pop(); avatarPicker(t, draw); });
+        const name = h('input', { class: 'ts-name', value: T.name, maxlength: '16', placeholder: t ? 'Nama Tim Biru' : 'Nama Tim Merah' });
+        name.addEventListener('input', () => { T.name = name.value.trim() || (t ? 'Tim Biru' : 'Tim Merah'); saveTeams(); });
+        const mem = h('input', { class: 'ts-mem', value: T.members || '', maxlength: '80', placeholder: '👥 Anggota (opsional): Andi, Sari, Budi' });
+        mem.addEventListener('input', () => { T.members = mem.value; saveTeams(); });
+        const rnd = btn('🎲', 'white small', () => { let n; do { n = NAMA_ACAK[Math.floor(Math.random() * NAMA_ACAK.length)]; } while (n === TEAM[1 - t].name); T.name = n; const al = Avatar.list.filter(a => a.id !== TEAM[1 - t].ic); T.ic = al[Math.floor(Math.random() * al.length)].id; saveTeams(); draw(); });
+        return h('div', { class: 'ts-card t' + t }, ic, h('div', { class: 'ts-f' }, h('div', { class: 'ts-row' }, name, rnd), mem));
+      };
+      const mid = h('div', { class: 'ts-mid' }, h('b', {}, 'VS'),
+        h('div', { class: 'ts-series', title: 'Skor kemenangan antar-ronde' }, h('span', { class: 'r' }, SERIES[0]), ' : ', h('span', { class: 'bl' }, SERIES[1])),
+        h('small', {}, 'skor ronde'),
+        btn('↺', 'white small', () => { SERIES = [0, 0]; saveTeams(); draw(); }));
+      wrap.append(card(0), mid, card(1));
+    };
+    draw();
+    return h('div', {}, wrap, h('p', { class: 'ts-hint' }, '✏️ Ketuk nama untuk mengganti · ketuk avatar untuk memilih karakter/emoji · 🎲 nama & avatar acak · skor ronde bertambah tiap menang (↺ mulai dari 0)'));
+  }
+  function avatarPicker(t, done) {
+    const ov = h('div', { class: 'overlay' });
+    let tab = Avatar.isAvatar(TEAM[t].ic) || !TEAM[t].ic ? 'kar' : 'emo';
+    const grid = h('div', { class: 'av-grid' });
+    const tabs = h('div', { class: 'chips', style: 'justify-content:center' });
+    const pick = id => { SFX.pop(); TEAM[t].ic = id; saveTeams(); ov.remove(); done(); };
+    const draw = () => {
+      tabs.innerHTML = ''; grid.innerHTML = '';
+      [['kar', '🧸 Karakter'], ['emo', '😀 Emoji']].forEach(([k, l]) => { const b = h('button', { class: 'chip wide' + (tab === k ? ' on' : '') }, l); tap(b, () => { tab = k; draw(); }); tabs.append(b); });
+      const items = tab === 'kar' ? Avatar.list.map(a => [a.id, a.name]) : MASKOT.map(e => [e, '']);
+      items.forEach(([id, name]) => {
+        const used = TEAM[1 - t].ic === id;
+        const b = h('button', { class: 'av-item' + (TEAM[t].ic === id ? ' on' : '') + (used ? ' used' : '') }, avatarEl(id), name ? h('small', {}, name) : null);
+        tap(b, () => { if (used) { alert('Avatar ini sudah dipakai tim lawan.'); return; } pick(id); });
+        grid.append(b);
+      });
+    };
+    draw();
+    ov.append(h('div', { class: 'panel av-panel' }, h('h2', {}, `Pilih Avatar ${t ? 'Tim Biru' : 'Tim Merah'}`), tabs, grid,
+      h('div', { class: 'row' }, btn('Tutup', 'white', () => ov.remove()))));
+    root.querySelector('.screen').append(ov);
+  }
+
+  /* ---------- filter materi/bab: hanya soal dari bab yang sudah diajarkan ---------- */
+  function materiBar() {
+    const all = QB.topics(S.kelas, S.mapel);
+    if (all.length < 2) return null;
+    const sel = QB.selTopics(S.kelas, S.mapel);
+    const on = sel ? all.filter(t => sel.includes(t.id)) : all;
+    const n = S.mapel === 'Matematika' ? '' : ` · ${QB.count(S.kelas, S.mapel)} soal`;
+    return h('div', { class: 'materi-bar' + (sel ? ' filtered' : '') },
+      h('span', { class: 'mb-ic' }, '📚'),
+      h('div', { class: 'mb-txt' }, h('b', {}, sel ? `Materi dipilih: ${on.length} dari ${all.length} bab${n}` : `Materi: semua bab (${all.length})${n}`),
+        h('small', {}, sel ? on.map(t => t.label).join(' · ') : 'Belum sampai bab tertentu? Pilih hanya bab yang sudah diajarkan.')),
+      btn('🎯 Pilih Bab', 'yellow small', () => materiPicker(all)));
+  }
+  function materiPicker(all) {
+    const cur = new Set(QB.selTopics(S.kelas, S.mapel) || all.map(t => t.id));
+    const list = h('div', { class: 'mp-list' });
+    const draw = () => {
+      list.innerHTML = '';
+      all.forEach((t, i) => {
+        const r = h('button', { class: 'mp-item' + (cur.has(t.id) ? ' on' : '') },
+          h('span', { class: 'mp-box' }, cur.has(t.id) ? '✔' : ''), h('span', { class: 'mp-no' }, t.legacy ? '📦' : `Bab ${i + 1}`), h('span', { class: 'mp-lbl' }, t.label), h('span', { class: 'mp-n' }, `${t.n} soal`));
+        tap(r, () => { SFX.click(); cur.has(t.id) ? cur.delete(t.id) : cur.add(t.id); draw(); });
+        list.append(r);
+      });
+    };
+    draw();
+    const upTo = h('div', { class: 'chips mp-upto' }, h('span', {}, 'Cepat: sampai bab'),
+      ...all.filter(t => !t.legacy).map((t, i) => { const c = h('button', { class: 'chip' }, String(i + 1)); tap(c, () => { cur.clear(); all.filter(x => !x.legacy).slice(0, i + 1).forEach(x => cur.add(x.id)); draw(); }); return c; }));
+    const ov = h('div', { class: 'overlay' });
+    ov.append(h('div', { class: 'panel mp-panel' },
+      h('h2', {}, '🎯 Pilih Materi / Bab'),
+      h('p', { class: 'sub' }, `${S.mapel} · Kelas ${S.kelas}. Soal hanya diambil dari bab yang dicentang. Pilihan tersimpan untuk kelas ini.${all.some(t => t.legacy) ? " 📦 = paket ringkasan berisi campuran beberapa bab, hilangkan centangnya jika ada bab yang belum diajarkan." : ""}`),
+      upTo, list,
+      h('div', { class: 'row' },
+        btn('☑ Semua', 'white', () => { all.forEach(t => cur.add(t.id)); draw(); }),
+        btn('✅ Simpan', 'green', () => {
+          if (!cur.size) { alert('Centang minimal satu bab.'); return; }
+          QB.setTopics(S.kelas, S.mapel, cur.size === all.length ? null : all.filter(t => cur.has(t.id)).map(t => t.id));
+          games();
+        }),
+        btn('Batal', 'white', () => ov.remove()))));
+    root.querySelector('.screen').append(ov);
   }
 
   /* ---------- pertandingan ---------- */
@@ -204,15 +300,19 @@ const App = (() => {
 
   function result(scr, game, ctx, winner, reason) {
     const ov = h('div', { class: 'overlay' });
+    if (winner === 0 || winner === 1) { SERIES[winner]++; saveTeams(); }
+    const members = t => TEAM[t].members && TEAM[t].members.trim() ? h('div', { class: 'members' }, '👥 ' + TEAM[t].members.trim()) : null;
     const acc = st => { const n = st.b + st.s; return n ? Math.round(st.b / n * 100) : 0; };
-    const stat = t => h('div', { class: `stat t${t}` + (winner === t ? ' win' : '') }, h('h4', {}, (winner === t ? '👑 ' : '') + ctx.teams[t]),
+    const stat = t => h('div', { class: `stat t${t}` + (winner === t ? ' win' : '') }, avatarEl(TEAM[t].ic, 'av-res'), h('h4', {}, (winner === t ? '👑 ' : '') + ctx.teams[t]), members(t),
       h('div', { class: 'nums' }, h('div', {}, h('b', {}, ctx.stats[t].b), '✔ Benar'), h('div', {}, h('b', {}, ctx.stats[t].s), '✘ Salah'), h('div', {}, h('b', {}, acc(ctx.stats[t]) + '%'), 'Akurasi')));
     const panel = h('div', { class: 'panel result' },
-      h('div', { class: 'trophy' }, winner < 0 ? '🤝' : '🏆'),
+      winner >= 0 ? h('div', { class: 'trophy av-win' }, avatarEl(TEAM[winner].ic), h('span', {}, '🏆')) : h('div', { class: 'trophy' }, '🤝'),
       h('div', { class: 'sub' }, winner < 0 ? 'Hasil pertandingan' : 'PEMENANGNYA'),
       h('div', { class: 'winner ' + (winner < 0 ? 'draw' : 't' + winner) }, winner < 0 ? 'SERI!' : ctx.teams[winner]),
       h('p', { class: 'sub' }, reason || ''),
+      winner >= 0 && TEAM[winner].members && TEAM[winner].members.trim() ? h('p', { class: 'congrats' }, `🎉 Selamat ${TEAM[winner].members.trim()}!`) : null,
       h('div', { class: 'stats' }, stat(0), stat(1)),
+      h('div', { class: 'series-line' }, '🏅 Skor ronde: ', h('b', { class: 'r' }, `${S.teams[0]} ${SERIES[0]}`), ' – ', h('b', { class: 'bl' }, `${SERIES[1]} ${S.teams[1]}`)),
       h('div', { class: 'row' }, btn('🔁 Main lagi', 'green', () => match(game)), btn('🎮 Game lain', 'blue', games), btn('🏠 Beranda', 'white', home)));
     ov.append(panel); scr.append(ov);
     E.confetti(ov, winner === 0 ? ['#ef4444', '#ffd23f', '#fff'] : winner === 1 ? ['#2f7cf6', '#ffd23f', '#fff'] : ['#ef4444', '#2f7cf6', '#ffd23f', '#22c55e']);

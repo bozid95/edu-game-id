@@ -496,3 +496,91 @@ pre.help{background:rgba(0,0,0,.3);padding:.7em;border-radius:.6em;font-size:1.0
 
 .overlay{overflow:auto}
 .panel{max-height:96vh;overflow:auto}
+
+/* ---------- panduan guru ---------- */
+.gd{display:flex;flex-direction:column;gap:2vh;max-width:78em;margin:0 auto;width:100%}
+.gd-nav{display:flex;flex-wrap:wrap;gap:.5em;padding:.6em;border-radius:.8em;background:rgba(30,20,70,.5)}
+.gd-nav .chip{font-size:1.05em}
+.gd-sec{background:rgba(255,255,255,.1);border-radius:1.2em;padding:1.2em 1.5em;font-size:1.25em;line-height:1.45;scroll-margin-top:4em}
+.gd-sec h3{font-size:1.5em;margin-bottom:.4em;color:var(--yellow)}
+.gd-sec p{margin:.5em 0}
+.gd-sec ol,.gd-sec ul{padding-left:1.4em;display:flex;flex-direction:column;gap:.3em}
+.gd-sec code{background:rgba(0,0,0,.3);padding:.1em .35em;border-radius:.3em;user-select:text;word-break:break-all}
+.gd-tbl{width:100%;border-collapse:collapse;margin:.4em 0;font-size:.95em}
+.gd-tbl th,.gd-tbl td{border:1px solid rgba(255,255,255,.2);padding:.45em .6em;text-align:left;vertical-align:top}
+.gd-tbl th{background:rgba(255,255,255,.12)}
+.gd-foot{justify-content:center;gap:1em;flex-wrap:wrap;display:flex;padding-bottom:2vh}
+
+/* ---------- filter materi/bab ---------- */
+.materi-bar{display:flex;align-items:center;gap:1em;background:rgba(255,255,255,.1);border:.12em dashed rgba(255,255,255,.35);border-radius:1em;padding:.6em 1em;margin-bottom:1.5vh}
+.materi-bar.filtered{background:rgba(255,210,63,.16);border:.12em solid var(--yellow)}
+.mb-ic{font-size:2.2em}
+.mb-txt{flex:1;min-width:0;display:flex;flex-direction:column}
+.mb-txt b{font-size:1.35em}
+.mb-txt small{font-size:1.05em;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-panel{width:min(92vw,70em);text-align:left}
+.mp-panel h2{text-align:center}
+.mp-panel .sub{text-align:center;margin-bottom:1vh}
+.mp-upto{align-items:center;justify-content:center;margin:1vh 0}
+.mp-upto span{font-weight:800;font-size:1.2em;margin-right:.4em}
+.mp-upto .chip{background:#efeafd;color:var(--ink);border-color:#d8d0f5}
+.mp-list{display:flex;flex-direction:column;gap:.5em;max-height:52vh;overflow:auto;padding:.3em}
+.mp-item{display:flex;align-items:center;gap:.8em;text-align:left;padding:.6em .9em;border-radius:.8em;background:#f3f0fb;border:.15em solid #ddd5f7;font-size:1.25em;color:var(--ink)}
+.mp-item.on{background:#e6fbe9;border-color:var(--green)}
+.mp-box{width:1.5em;height:1.5em;border-radius:.35em;border:.15em solid #9b8fd0;display:grid;place-items:center;font-weight:900;color:#fff;flex:none}
+.mp-item.on .mp-box{background:var(--green);border-color:var(--green)}
+.mp-no{font-weight:800;opacity:.6;flex:none;min-width:3.6em}
+.mp-lbl{flex:1;font-weight:700}
+.mp-n{opacity:.6;flex:none;font-weight:700}
+.btn3d.yellow{--c:var(--yellow);--cd:var(--yellow-d);--fg:var(--ink)}
+
+/* ---------- pengaturan tim ---------- */
+.team-setup2{display:flex;gap:1.2vw;align-items:stretch;justify-content:center;flex-wrap:wrap}
+.ts-card{display:flex;align-items:center;gap:.8em;padding:.6em .9em;border-radius:1.2em;color:#fff;box-shadow:0 .3em 0 rgba(0,0,0,.3);flex:1 1 26em;max-width:40em}
+.ts-card.t0{background:linear-gradient(135deg,var(--red),var(--red-d))}
+.ts-card.t1{background:linear-gradient(135deg,var(--blue),var(--blue-d))}
+.ts-ic{font-size:3em;width:1.5em;height:1.5em;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;flex:none;border:.08em dashed rgba(255,255,255,.6)}
+.ts-f{flex:1;min-width:0;display:flex;flex-direction:column;gap:.35em}
+.ts-row{display:flex;gap:.4em;align-items:center}
+.ts-name{flex:1;min-width:0;font-size:1.7em;font-weight:800;border:none;border-bottom:.12em dashed rgba(255,255,255,.7);background:transparent;color:#fff;outline:none;padding:.1em .2em}
+.ts-name:focus{background:rgba(255,255,255,.15);border-radius:.3em}
+.ts-mem{font-size:1.1em;border:none;border-radius:.5em;padding:.3em .6em;background:rgba(255,255,255,.18);color:#fff;outline:none}
+.ts-mem::placeholder,.ts-name::placeholder{color:rgba(255,255,255,.7)}
+.ts-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15em}
+.ts-mid b{font-size:2.2em;color:var(--yellow)}
+.ts-series{font-size:1.8em;font-weight:800;background:rgba(0,0,0,.25);border-radius:.6em;padding:0 .5em}
+.ts-series .r,.series-line .r{color:#ff8a8a}.ts-series .bl,.series-line .bl{color:#8ab8ff}
+.ts-mid small{opacity:.75;font-size:.95em}
+.ts-mid .btn3d{font-size:.9em;padding:.1em .6em}
+.ts-hint{text-align:center;font-size:1.05em;opacity:.75;margin:.8vh 0 2vh}
+.result .members{font-size:1em;opacity:.75;margin:-.2em 0 .4em;font-weight:600}
+.result .congrats{font-size:1.6em;font-weight:800;color:var(--purple);margin:.2em 0}
+.series-line{font-size:1.4em;margin:1.2vh 0;font-weight:700}
+.series-line .r{color:var(--red)}.series-line .bl{color:var(--blue)}
+
+/* ---------- avatar ---------- */
+.av{display:inline-grid;place-items:center;width:1em;height:1em;line-height:1;flex:none}
+.av svg{width:100%;height:100%;display:block;filter:drop-shadow(0 .06em .08em rgba(0,0,0,.25))}
+.av.emo{font-size:.8em}
+.ts-ic{position:relative;font-size:4.2em;width:1.25em;height:1.25em;padding:0;border:none;background:none}
+.ts-ic .av{width:100%;height:100%}
+.ts-ic i{position:absolute;right:-.05em;bottom:-.05em;font-size:.28em;font-style:normal;background:#fff;border-radius:50%;width:1.6em;height:1.6em;display:grid;place-items:center;box-shadow:0 .1em .2em rgba(0,0,0,.3)}
+.av-panel{width:min(92vw,72em)}
+.av-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(7.5em,1fr));gap:.8em;margin:2vh 0;max-height:58vh;overflow:auto;padding:.4em}
+.av-item{display:flex;flex-direction:column;align-items:center;gap:.3em;padding:.6em .3em;border-radius:1em;background:#f3f0fb;border:.18em solid transparent;color:var(--ink)}
+.av-item .av{font-size:4.5em}
+.av-item small{font-weight:800;font-size:1em}
+.av-item.on{border-color:var(--green);background:#e6fbe9}
+.av-item.used{opacity:.35}
+.av-item:active{transform:scale(.95)}
+.stat .av-res{font-size:3.4em;margin:0 auto .2em;display:grid}
+.trophy.av-win{display:flex;align-items:flex-end;justify-content:center;gap:.1em}
+.trophy.av-win .av{font-size:1em}
+.trophy.av-win span{font-size:.55em}
+.vs-badges .av{font-size:1.4em;vertical-align:middle;margin-right:.25em}
+
+/* konten statis untuk mesin pencari, tampil sesaat sebelum aplikasi dimuat */
+.seo-static{max-width:60em;margin:6vh auto;padding:0 4vw;color:#fff;font-size:1.3em;line-height:1.5}
+.seo-static h1{font-size:2.4em;line-height:1.1;margin-bottom:.4em}
+.seo-static h2{font-size:1.4em;margin:1em 0 .3em;color:var(--yellow)}
+.seo-static ul{padding-left:1.3em;columns:2}

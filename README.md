@@ -35,18 +35,29 @@ Setiap game bisa diatur **waktu** dan **target** sebelum mulai (ada nilai defaul
 - **Semua jenjang:** Pendidikan Agama (Islam, Kristen, Katolik, Hindu, Buddha, Khonghucu; di madrasah diganti rumpun PAI), muatan lokal Bahasa Jawa & Bahasa Sunda, mode **Campuran**
 
 ### Rekap bank soal
-| Jenjang | Mapel | Paket | Butir soal statis* |
-|---|---|---|---|
-| SD | 16 | 31 | 875 |
-| MI | 15 | 30 | 830 |
-| SMP | 18 | 27 | 759 |
-| MTs | 17 | 26 | 775 |
-| SMA | 22 | 24 | 593 |
-| MA | 21 | 23 | 557 |
-| SMK | 25 | 29 | 646 |
-| **Total unik** | | **98** | **2.578** |
+Setiap mata pelajaran memiliki **minimal 300 soal per jenjang** (di luar Matematika yang dibuat otomatis tanpa batas).
 
-\*Belum termasuk Matematika (generator soal tak terbatas per kelas). Mapel umum dipakai bersama antarjenjang setara, jadi angka per jenjang saling tumpang tindih.
+| Jenjang | Mapel | Paket/bab | Butir soal statis* | Soal per mapel |
+|---|---|---|---|---|
+| SD | 16 | 84 | 5.543 | 304 – 827 |
+| MI | 15 | 79 | 4.624 | 302 – 423 |
+| SMP | 18 | 88 | 5.715 | 300 – 625 |
+| MTs | 17 | 83 | 5.051 | 300 – 378 |
+| SMA | 22 | 129 | 7.956 | 301 – 626 |
+| MA | 21 | 124 | 7.508 | 301 – 626 |
+| SMK | 25 | 132 | 7.874 | 301 – 449 |
+| **Total unik** | | **414** | **25.892** | |
+
+*Belum termasuk Matematika (generator soal tak terbatas per kelas). Mapel umum dipakai bersama antarjenjang setara, jadi angka per jenjang saling tumpang tindih.
+
+## Pilih materi/bab yang sudah diajarkan 🎯
+Setelah memilih mapel, ketuk **🎯 Pilih Bab** di layar Pilih Permainan. Soal hanya diambil dari bab yang dicentang
+(ada tombol cepat "sampai bab N"). Pilihan tersimpan per jenjang, kelas, dan mapel. Untuk Matematika, pilihannya berupa topik
+(mis. Pecahan, KPK, Persamaan linear). Paket bertanda 📦 adalah ringkasan campuran beberapa bab.
+
+## Tim, avatar & skor ronde 🐯🦅
+Di layar Pilih Permainan, ketuk nama tim untuk mengganti, ketuk avatar untuk memilih 24 karakter (SVG buatan sendiri, berjalan offline)
+atau emoji, isi nama anggota (opsional), atau 🎲 untuk nama & avatar acak. Skor ronde antar-pertandingan tampil di layar dan di hasil akhir.
 
 ## Bank Soal Guru ✏️
 Menu **📝 Bank Soal Guru** di beranda: guru membuat paket soal sendiri (PG, Benar/Salah, Pasangan, Urutan)
@@ -61,7 +72,21 @@ UR: Urutkan daur air | Penguapan ; Pengembunan ; Hujan
 Paket disimpan di browser perangkat. Gunakan **Ekspor/Impor (.json)** untuk memindahkan ke TV lain.
 
 ## Menambah soal bawaan
-Edit file di `js/questions/` (format dijelaskan di `bank.js`), lalu cek tidak ada error dengan membuka `index.html`.
+Soal per bab ditulis di `js/questions/bab-*.js` dengan format teks ringkas (`QB.text`, dijelaskan di `bank.js`):
+
+```
+% 7                      ← kelas
+## Sistem Pernapasan     ← satu bab (bisa dipilih guru)
+@ berfungsi | Organ yang ← blok fakta sejenis
+Paru-paru = tempat pertukaran oksigen dan karbon dioksida
+Hidung = menyaring udara
+PG: soal | jawaban benar | pengecoh | pengecoh | pengecoh
+BS: pernyataan | B
+UR: instruksi | langkah 1 ; langkah 2 ; langkah 3
+```
+Setiap fakta otomatis menjadi 2 soal pilihan ganda (dua arah), 2 soal benar/salah, dan bahan kartu pasangan.
+Pengecoh diambil dari fakta lain di blok yang sama. File baru perlu didaftarkan di `index.html` dan `tools/build.js`.
+Panduan guru lengkap ada di [PANDUAN-GURU.md](PANDUAN-GURU.md).
 
 ## Build terenkode & deploy (Vercel)
 ```
@@ -69,6 +94,12 @@ node tools/build.js      # menghasilkan dist/ dengan bank soal terenkode
 ```
 `vercel.json` sudah mengatur Vercel untuk menjalankan build ini dan **hanya menyajikan `dist/`**,
 jadi file soal mentah tidak ikut ter-deploy.
+
+### SEO & pratinjau link
+`index.html` berisi meta description, Open Graph, Twitter Card, data terstruktur (schema.org WebApplication), manifest, dan
+konten teks untuk mesin pencari. Build mengisi alamat situs ke canonical, gambar pratinjau (`assets/og-image.jpg`, 1200×630),
+`robots.txt`, dan `sitemap.xml`. Di Vercel alamat diambil otomatis dari `VERCEL_PROJECT_PRODUCTION_URL`;
+untuk domain sendiri atau build lokal: `SITE_URL=https://domainanda.id node tools/build.js`.
 
 > **Catatan keamanan:** enkode ini *menyamarkan* kunci jawaban agar tidak terbaca langsung lewat
 > Inspect/View Source. Ini bukan enkripsi yang tak bisa dibuka: semua game berjalan di browser,
