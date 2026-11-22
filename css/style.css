@@ -586,7 +586,7 @@ pre.help{background:rgba(0,0,0,.3);padding:.7em;border-radius:.6em;font-size:1.0
 .seo-static ul{padding-left:1.3em;columns:2}
 
 /* ---------- hubungi kami ---------- */
-.contact-fab{position:absolute;left:2vw;bottom:2.5vh;z-index:5;font-size:1.3em;display:flex;align-items:center;gap:.6em;background:#25d366;color:#fff;border-radius:2em;padding:.45em 1.2em .45em .6em;box-shadow:0 .3em 0 #128c4a,0 .6em 1.2em rgba(0,0,0,.3);text-align:left}
+.contact-fab{position:absolute;right:1.5vw;bottom:13vh;z-index:5;font-size:1.3em;display:flex;align-items:center;gap:.6em;background:#25d366;color:#fff;border-radius:2em;padding:.45em 1.2em .45em .6em;box-shadow:0 .3em 0 #128c4a,0 .6em 1.2em rgba(0,0,0,.3);text-align:left}
 .contact-fab:active{transform:translateY(.2em);box-shadow:0 .1em 0 #128c4a}
 .contact-fab .wa-ic{font-size:2em;line-height:1}
 .contact-fab b{display:block;font-size:1.25em;line-height:1.1}
