@@ -74,7 +74,7 @@ input{font-family:inherit}
 .vs-badges b{font-size:1.8em;color:var(--yellow);text-shadow:0 .1em 0 #c2410c}
 .pill{padding:.25em 1em;border-radius:2em;font-weight:800;box-shadow:0 .2em 0 rgba(0,0,0,.25)}
 .pill.red{background:var(--red)}.pill.blue{background:var(--blue)}
-.home-foot{position:absolute;bottom:2.4vh;left:0;right:0;text-align:center;font-size:1.05em;opacity:.75;padding:0 12vw}
+.home-foot{position:absolute;bottom:2.4vh;left:0;right:0;text-align:left;font-size:1em;opacity:.7;padding:0 calc(2vw + 23em) 0 2vw;line-height:1.3}
 .floaters span{position:absolute;font-size:4em;opacity:.18;animation:float 5s ease-in-out infinite}
 
 /* menu header */
@@ -586,11 +586,9 @@ pre.help{background:rgba(0,0,0,.3);padding:.7em;border-radius:.6em;font-size:1.0
 .seo-static ul{padding-left:1.3em;columns:2}
 
 /* ---------- hubungi kami ---------- */
-.contact-fab{position:absolute;right:1vw;bottom:10vh;z-index:5;font-size:1em;display:flex;align-items:center;gap:.6em;background:#25d366;color:#fff;border-radius:2em;padding:.35em .9em .35em .5em;box-shadow:0 .3em 0 #128c4a,0 .6em 1.2em rgba(0,0,0,.3);text-align:left}
-.contact-fab:active{transform:translateY(.2em);box-shadow:0 .1em 0 #128c4a}
-.contact-fab .wa-ic{font-size:1.5em;line-height:1}
-.contact-fab b{display:block;font-size:1.1em;line-height:1.1}
-.contact-fab small{display:block;font-size:.78em;opacity:.9}
+#globalBtns #btnContact{width:auto;border-radius:1.6em;padding:0 1em 0 .8em;background:#25d366;border-color:rgba(255,255,255,.35);color:#fff;font-weight:800;font-size:1.15em;height:3.62em;display:flex;align-items:center;gap:.35em;white-space:nowrap;box-shadow:0 .2em 0 #128c4a}
+#globalBtns #btnContact:active{transform:translateY(.15em);box-shadow:none}
+.game-active #globalBtns #btnContact{display:none}
 .ct-panel{width:min(92vw,52em);text-align:left}
 .ct-panel h2,.ct-panel .sub,.ct-panel .big-ic{text-align:center}
 .ct-list{display:grid;grid-template-columns:1fr 1fr;gap:.6em;margin:1.5vh 0}

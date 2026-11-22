@@ -184,7 +184,7 @@ const Guru = (() => {
           ['Panjat Pinang memakai soal lain', 'Paket belum punya soal Urutan, sehingga diambil soal urutan bawaan/otomatis. Tambahkan soal di tab 🔢 Urutan.'],
           ['Huruf aneh (Ã©, â€) setelah impor .txt', 'Simpan file .txt dengan Encoding UTF-8.'],
           ['Soal hilang setelah browser diperbarui/dibersihkan', 'Impor kembali file cadangan .json. Biasakan Ekspor setelah membuat soal.'],
-          ['Butuh bantuan, soal bawaan keliru, atau ingin fitur baru?', 'Gratis! Ketuk tombol hijau 💬 Hubungi Kami di beranda untuk mengirim pesan WhatsApp.']
+          ['Butuh bantuan, soal bawaan keliru, atau ingin fitur baru?', 'Ketuk tombol hijau 💬 Hubungi Kami di pojok kanan bawah untuk mengirim pesan WhatsApp.']
         ]))
     );
     // navigasi cepat antarbagian

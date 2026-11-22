@@ -59,7 +59,6 @@ const App = (() => {
       btn(`📝 Buat Bank Soal Sendiri${Guru.count() ? ` (${Guru.count()})` : ''}`, 'white', () => Guru.list(guruApi)),
       h('div', { class: 'vs-badges' }, h('span', { class: 'pill red' }, avatarEl(TEAM[0].ic), S.teams[0]), h('b', {}, 'VS'), h('span', { class: 'pill blue' }, avatarEl(TEAM[1].ic), S.teams[1]))
     ));
-    el.append(contactBtn());
     el.append(h('div', { class: 'home-foot' }, 'Soal mengacu Capaian Pembelajaran Kurikulum Merdeka (Kep. Kepala BSKAP No. 046/H/KR/2025) dengan pendekatan Pembelajaran Mendalam'));
     show(el);
   }
@@ -322,11 +321,6 @@ const App = (() => {
 
   /* ---------- hubungi pengembang via WhatsApp (gratis) ---------- */
   const WA = '6289623346046';
-  function contactBtn() {
-    const b = h('button', { class: 'contact-fab', title: 'Hubungi kami gratis lewat WhatsApp' }, h('span', { class: 'wa-ic' }, '💬'), h('span', {}, h('b', {}, 'Hubungi Kami'), h('small', {}, 'Gratis · lapor soal & request fitur')));
-    tap(b, () => { SFX.click(); contact(); });
-    return b;
-  }
   function contact(pre, info) {
     const ov = h('div', { class: 'overlay' });
     const TOPIK = [
@@ -348,7 +342,7 @@ const App = (() => {
     };
     ov.append(h('div', { class: 'panel ct-panel' },
       h('div', { class: 'big-ic' }, '💬'), h('h2', {}, 'Hubungi Kami'),
-      h('p', { class: 'sub' }, 'Gratis! Laporkan soal yang keliru, minta tambahan bab, atau usulkan fitur baru lewat WhatsApp.'),
+      h('p', { class: 'sub' }, 'Laporkan soal yang keliru, minta tambahan bab, atau usulkan fitur baru lewat WhatsApp.'),
       list, where, sekolah,
       h('div', { class: 'row' }, btn('📲 Kirim via WhatsApp', 'green', send), btn('Tutup', 'white', () => ov.remove())),
       h('p', { class: 'ct-num' }, 'Membuka WhatsApp · perlu koneksi internet')));
@@ -373,6 +367,7 @@ const App = (() => {
   tap(document.getElementById('btnFull'), () => {
     try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); } catch (e) {}
   });
+  tap(document.getElementById('btnContact'), () => { SFX.click(); contact(); });
   document.addEventListener('pointerdown', () => SFX.unlock(), { once: true });
   document.addEventListener('contextmenu', e => e.preventDefault());
 
