@@ -157,3 +157,9 @@ BS: Merokok dapat merusak alveolus | B
 PS: Hidung = menyaring udara ; Trakea = saluran udara ; Alveolus = pertukaran gas ; Diafragma = otot pernapasan
 UR: Urutkan jalannya udara saat bernapas | Hidung ; Faring ; Trakea ; Bronkus ; Alveolus
 ```
+
+---
+
+## Butuh bantuan? Gratis 💬
+Menemukan soal yang keliru, ingin bab tertentu ditambahkan, atau punya ide fitur? Ketuk tombol hijau **Hubungi Kami** di beranda,
+atau **🚩 Laporkan** di layar hasil pertandingan. WhatsApp akan terbuka dengan pesan yang sudah terisi. Nomor: **0896-2334-6046**.

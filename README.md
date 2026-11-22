@@ -59,6 +59,11 @@ Setelah memilih mapel, ketuk **🎯 Pilih Bab** di layar Pilih Permainan. Soal h
 Di layar Pilih Permainan, ketuk nama tim untuk mengganti, ketuk avatar untuk memilih 24 karakter (SVG buatan sendiri, berjalan offline)
 atau emoji, isi nama anggota (opsional), atau 🎲 untuk nama & avatar acak. Skor ronde antar-pertandingan tampil di layar dan di hasil akhir.
 
+## Hubungi kami (gratis) 💬
+Tombol hijau **Hubungi Kami** di beranda dan tombol **🚩 Laporkan** di layar hasil membuka WhatsApp
+(0896-2334-6046) dengan pesan yang sudah terisi: laporan soal keliru (lengkap dengan game, jenjang, kelas, mapel),
+permintaan tambah soal/bab, request fitur, atau pertanyaan. Gratis.
+
 ## Bank Soal Guru ✏️
 Menu **📝 Bank Soal Guru** di beranda: guru membuat paket soal sendiri (PG, Benar/Salah, Pasangan, Urutan)
 lewat formulir atau **Tempel Cepat** dari Word/Excel:

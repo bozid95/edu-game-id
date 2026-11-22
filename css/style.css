@@ -584,3 +584,20 @@ pre.help{background:rgba(0,0,0,.3);padding:.7em;border-radius:.6em;font-size:1.0
 .seo-static h1{font-size:2.4em;line-height:1.1;margin-bottom:.4em}
 .seo-static h2{font-size:1.4em;margin:1em 0 .3em;color:var(--yellow)}
 .seo-static ul{padding-left:1.3em;columns:2}
+
+/* ---------- hubungi kami ---------- */
+.contact-fab{position:absolute;left:2vw;bottom:2.5vh;z-index:5;font-size:1.3em;display:flex;align-items:center;gap:.6em;background:#25d366;color:#fff;border-radius:2em;padding:.45em 1.2em .45em .6em;box-shadow:0 .3em 0 #128c4a,0 .6em 1.2em rgba(0,0,0,.3);text-align:left}
+.contact-fab:active{transform:translateY(.2em);box-shadow:0 .1em 0 #128c4a}
+.contact-fab .wa-ic{font-size:2em;line-height:1}
+.contact-fab b{display:block;font-size:1.25em;line-height:1.1}
+.contact-fab small{display:block;font-size:.95em;opacity:.95}
+.ct-panel{width:min(92vw,52em);text-align:left}
+.ct-panel h2,.ct-panel .sub,.ct-panel .big-ic{text-align:center}
+.ct-list{display:grid;grid-template-columns:1fr 1fr;gap:.6em;margin:1.5vh 0}
+.ct-item{display:flex;gap:.6em;align-items:center;text-align:left;padding:.6em .8em;font-size:1.3em;border-radius:.9em;background:#f3f0fb;border:.15em solid #ddd5f7;color:var(--ink)}
+.ct-item.on{background:#e6fbe9;border-color:#25d366}
+.ct-ic{font-size:1.8em}
+.ct-item b{display:block;font-size:1.15em}.ct-item small{display:block;opacity:.7;font-size:.95em}
+.ct-panel .fld{width:100%;margin:.3em 0;font-size:1.15em;color:var(--ink);background:#fff;border:.12em solid #ddd5f7;border-radius:.6em;padding:.5em .7em}
+.ct-num{text-align:center;font-size:1.05em;opacity:.65;margin-top:.8vh}
+@media (max-width:700px){.ct-list{grid-template-columns:1fr}}

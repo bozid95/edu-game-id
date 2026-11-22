@@ -59,6 +59,7 @@ const App = (() => {
       btn(`📝 Buat Bank Soal Sendiri${Guru.count() ? ` (${Guru.count()})` : ''}`, 'white', () => Guru.list(guruApi)),
       h('div', { class: 'vs-badges' }, h('span', { class: 'pill red' }, avatarEl(TEAM[0].ic), S.teams[0]), h('b', {}, 'VS'), h('span', { class: 'pill blue' }, avatarEl(TEAM[1].ic), S.teams[1]))
     ));
+    el.append(contactBtn());
     el.append(h('div', { class: 'home-foot' }, 'Soal mengacu Capaian Pembelajaran Kurikulum Merdeka (Kep. Kepala BSKAP No. 046/H/KR/2025) dengan pendekatan Pembelajaran Mendalam'));
     show(el);
   }
@@ -313,9 +314,45 @@ const App = (() => {
       winner >= 0 && TEAM[winner].members && TEAM[winner].members.trim() ? h('p', { class: 'congrats' }, `🎉 Selamat ${TEAM[winner].members.trim()}!`) : null,
       h('div', { class: 'stats' }, stat(0), stat(1)),
       h('div', { class: 'series-line' }, '🏅 Skor ronde: ', h('b', { class: 'r' }, `${S.teams[0]} ${SERIES[0]}`), ' – ', h('b', { class: 'bl' }, `${SERIES[1]} ${S.teams[1]}`)),
-      h('div', { class: 'row' }, btn('🔁 Main lagi', 'green', () => match(game)), btn('🎮 Game lain', 'blue', games), btn('🏠 Beranda', 'white', home)));
+      h('div', { class: 'row' }, btn('🔁 Main lagi', 'green', () => match(game)), btn('🎮 Game lain', 'blue', games), btn('🏠 Beranda', 'white', home)),
+      h('div', { class: 'row' }, btn('🚩 Ada soal yang keliru? Laporkan', 'white small', () => contact('soal', `${game.name} · ${JENJANG[S.jenjang] ? JENJANG[S.jenjang].name : ''} kelas ${S.kelas} · ${S.mapel}`))));
     ov.append(panel); scr.append(ov);
     E.confetti(ov, winner === 0 ? ['#ef4444', '#ffd23f', '#fff'] : winner === 1 ? ['#2f7cf6', '#ffd23f', '#fff'] : ['#ef4444', '#2f7cf6', '#ffd23f', '#22c55e']);
+  }
+
+  /* ---------- hubungi pengembang via WhatsApp (gratis) ---------- */
+  const WA = '6289623346046';
+  function contactBtn() {
+    const b = h('button', { class: 'contact-fab', title: 'Hubungi kami gratis lewat WhatsApp' }, h('span', { class: 'wa-ic' }, '💬'), h('span', {}, h('b', {}, 'Hubungi Kami'), h('small', {}, 'Gratis · lapor soal & request fitur')));
+    tap(b, () => { SFX.click(); contact(); });
+    return b;
+  }
+  function contact(pre, info) {
+    const ov = h('div', { class: 'overlay' });
+    const TOPIK = [
+      ['soal', '🚩', 'Laporkan soal keliru', 'Kunci jawaban salah, soal ambigu, atau salah ketik'],
+      ['bab', '📚', 'Minta tambah soal / bab', 'Mapel, kelas, atau bab yang belum ada'],
+      ['fitur', '💡', 'Request fitur', 'Ide game baru atau fitur yang dibutuhkan'],
+      ['bantuan', '🙋', 'Bantuan & pertanyaan', 'Cara pakai di TV kelas, deploy, dan lainnya']
+    ];
+    let sel = pre || 'soal';
+    const where = h('textarea', { class: 'fld', rows: '3', placeholder: 'Tulis singkat di sini (opsional), mis. soal "..." jawabannya seharusnya "..."' });
+    const sekolah = h('input', { class: 'fld', placeholder: 'Nama & sekolah (opsional)' });
+    const list = h('div', { class: 'ct-list' });
+    const draw = () => { list.innerHTML = ''; TOPIK.forEach(([k, ic, t, d]) => { const r = h('button', { class: 'ct-item' + (sel === k ? ' on' : '') }, h('span', { class: 'ct-ic' }, ic), h('span', {}, h('b', {}, t), h('small', {}, d))); tap(r, () => { sel = k; draw(); }); list.append(r); }); };
+    draw();
+    const send = () => {
+      const t = TOPIK.find(x => x[0] === sel);
+      const msg = [`Halo Arena Juara, saya ingin: ${t[2]}`, info ? `Konteks: ${info}` : (S.mapel ? `Konteks: ${JENJANG[S.jenjang] ? JENJANG[S.jenjang].name : ''} kelas ${S.kelas} · ${S.mapel}` : ''), where.value.trim() ? `Detail: ${where.value.trim()}` : '', sekolah.value.trim() ? `Dari: ${sekolah.value.trim()}` : ''].filter(Boolean).join(String.fromCharCode(10));
+      window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
+    };
+    ov.append(h('div', { class: 'panel ct-panel' },
+      h('div', { class: 'big-ic' }, '💬'), h('h2', {}, 'Hubungi Kami'),
+      h('p', { class: 'sub' }, 'Gratis! Laporkan soal yang keliru, minta tambahan bab, atau usulkan fitur baru lewat WhatsApp.'),
+      list, where, sekolah,
+      h('div', { class: 'row' }, btn('📲 Kirim via WhatsApp', 'green', send), btn('Tutup', 'white', () => ov.remove())),
+      h('p', { class: 'ct-num' }, 'WhatsApp: 0896-2334-6046 · perlu koneksi internet')));
+    (root.querySelector('.screen') || root).append(ov);
   }
 
   /* ---------- jembatan ke Bank Soal Guru ---------- */
