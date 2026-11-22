@@ -218,18 +218,26 @@ const QB = (() => {
   function fase(k) { return k <= 2 ? 'A' : k <= 4 ? 'B' : k <= 6 ? 'C' : k <= 9 ? 'D' : k === 10 ? 'E' : 'F'; }
 
   /* ---- build terenkode: kunci jawaban tidak tampil sebagai teks biasa ---- */
-  const KEYSTR = 'ArenaJuara#2026';
-  function xor(bytes) { const k = new TextEncoder().encode(KEYSTR); return bytes.map((b, i) => b ^ k[i % k.length] ^ (i * 7 & 255)); }
+  // Substitusi huruf tetap (karakter ASCII 33–126 diacak dengan permutasi), sehingga teks tidak terbaca
+  // tetapi pola berulangnya tetap ada → file bisa dikompres gzip/brotli oleh server (jauh lebih kecil).
+  const ENC = new Array(127), DEC = new Array(127);
+  for (let c = 33; c <= 126; c++) { const e = 33 + ((c - 33) * 29 + 41) % 94; ENC[c] = e; DEC[e] = c; }
+  const subst = (s, T) => { let o = ''; for (let i = 0; i < s.length; i++) { const c = s.charCodeAt(i); o += c >= 33 && c <= 126 ? String.fromCharCode(T[c]) : s[i]; } return o; };
   function dump() { return JSON.stringify(banks.filter(b => !b.custom)); }
-  function load(b64) {
-    const raw = atob(b64); const bytes = new Uint8Array(raw.length);
-    for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
-    JSON.parse(new TextDecoder().decode(xor(bytes))).forEach(b => banks.push(b));
-  }
-  function encode(json) { // dipakai oleh tools/build.js (Node)
-    const bytes = xor(new TextEncoder().encode(json));
-    let s = ''; bytes.forEach(b => s += String.fromCharCode(b)); return btoa(s);
-  }
+  function load(enc) { JSON.parse(subst(enc, DEC)).forEach(b => banks.push(b)); dataReady = true; }
+  function encode(json) { return subst(json, ENC); } // dipakai oleh tools/build.js (Node)
 
-  return { add, text, get, mapelFor, info, elemen, count, fase, setCustom, isCustom, CUSTOM_PREFIX, dump, load, encode, setJenjang, jenjang, topics, selTopics, setTopics };
+  // Bank soal versi build dimuat di latar belakang setelah beranda tampil (halaman awal lebih cepat)
+  let dataReady = true, readyP = Promise.resolve();
+  function loadAsync(src) {
+    dataReady = false;
+    readyP = new Promise((res, rej) => {
+      const s = document.createElement('script'); s.src = src; s.async = true;
+      s.onload = () => { dataReady = true; res(); }; s.onerror = rej; document.head.appendChild(s);
+    });
+    return readyP;
+  }
+  const ready = () => readyP, isReady = () => dataReady;
+
+  return { add, text, get, mapelFor, info, elemen, count, fase, setCustom, isCustom, CUSTOM_PREFIX, dump, load, encode, loadAsync, ready, isReady, setJenjang, jenjang, topics, selTopics, setTopics };
 })();

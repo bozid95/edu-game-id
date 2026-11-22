@@ -35,10 +35,10 @@ function copy(src, dst) {
 copy(ROOT, DIST);
 
 // 3) tulis data terenkode & ganti tag script
-fs.writeFileSync(path.join(DIST, 'js', 'questions', 'data.js'), `/* bank soal terenkode – sumber asli ada di folder proyek */\nQB.load("${enc}");\n`);
+fs.writeFileSync(path.join(DIST, 'js', 'questions', 'data.js'), `/* bank soal terenkode – sumber asli ada di folder proyek */\nQB.load(${JSON.stringify(enc)});\n`);
 let html = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8');
 BANK_FILES.forEach((f, i) => {
-  html = html.replace(new RegExp(`<script src="js/questions/${f.replace('.', '\\.')}"></script>\\n?`), i === 0 ? '<script src="js/questions/data.js"></script>\n' : '');
+  html = html.replace(new RegExp(`<script src="js/questions/${f.replace('.', '\\.')}"></script>\\n?`), '');
 });
 // 4) SEO: alamat situs untuk canonical, Open Graph, robots, dan sitemap
 //    Vercel otomatis menyediakan VERCEL_PROJECT_PRODUCTION_URL saat build; bisa juga diisi manual: SITE_URL=https://domainanda.id
@@ -46,6 +46,8 @@ const host = process.env.SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL |
 const SITE = host ? (/^https?:\/\//.test(host) ? host : 'https://' + host).replace(/\/$/, '') : '';
 if (!SITE) console.warn('⚠️  SITE_URL belum diisi: pratinjau gambar link butuh alamat lengkap. Contoh: SITE_URL=https://arenajuara.vercel.app node tools/build.js');
 html = html.split('%SITE_URL%').join(SITE);
+// bank soal dimuat setelah aplikasi tampil (tidak menghambat halaman awal)
+html = html.replace('</body>', '<script>QB.loadAsync("js/questions/data.js")</script>\n</body>');
 fs.writeFileSync(path.join(DIST, 'index.html'), html);
 const robots = path.join(DIST, 'robots.txt');
 fs.writeFileSync(robots, fs.readFileSync(robots, 'utf8').split('%SITE_URL%').join(SITE));

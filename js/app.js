@@ -89,6 +89,12 @@ const App = (() => {
 
   /* ---------- mapel ---------- */
   function mapel() {
+    if (!QB.isReady()) { // versi online: bank soal masih diunduh di latar belakang
+      const ov = h('div', { class: 'overlay' }, h('div', { class: 'panel' }, h('div', { class: 'big-ic' }, '📚'), h('h2', {}, 'Memuat bank soal…'), h('div', { class: 'splash-bar', style: 'margin:2vh auto' }, h('i'))));
+      (root.querySelector('.screen') || root).append(ov);
+      QB.ready().then(mapel, () => { ov.remove(); alert('Gagal memuat bank soal. Periksa koneksi internet lalu coba lagi.'); });
+      return;
+    }
     // kelompokkan mapel agar mudah dicari di layar besar
     const GROUPS = [
       ['📘 Mata Pelajaran Umum', m => !/^(PA |Kejuruan|Bahasa (Jawa|Sunda)|📝)/.test(m) && !PILIHAN.includes(m) && !MAPEL_MADRASAH.includes(m) && m !== 'Campuran'],
@@ -216,6 +222,10 @@ const App = (() => {
   /* ---------- pertandingan ---------- */
   function match(game) {
     E.clearAll();
+    // di ponsel: coba layar penuh + kunci mendatar (diabaikan bila browser tidak mendukung)
+    if (matchMedia('(pointer:coarse) and (max-width:900px)').matches && !document.fullscreenElement) {
+      try { const p = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); if (p && p.then) p.then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape').catch(() => {})).catch(() => {}); } catch (e) {}
+    }
     document.body.classList.add('game-active');
     const timerEl = h('div', { class: 'timer' }, '--:--');
     const quit = btn('✖ Keluar', 'white small', () => confirmQuit());
