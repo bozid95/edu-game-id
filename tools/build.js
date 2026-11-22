@@ -6,7 +6,7 @@
    ============================================================ */
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const ROOT = path.resolve(__dirname, '..'), DIST = path.join(ROOT, 'dist');
-const BANK_FILES = ['sd.js', 'smp.js', 'smk.js', 'sd-ext.js', 'smp-ext.js', 'smk-ext.js', 'agama.js', 'lainnya.js'];
+const BANK_FILES = ['sd.js', 'smp.js', 'smk.js', 'sd-ext.js', 'smp-ext.js', 'smk-ext.js', 'agama.js', 'lainnya.js', 'sma.js', 'mts.js', 'mi-ma.js'];
 
 // 1) kumpulkan semua bank soal
 const sandbox = { TextEncoder, TextDecoder, btoa, atob, console };

@@ -7,8 +7,15 @@ const App = (() => {
   const JENJANG = {
     SD: { name: 'SD', full: 'Sekolah Dasar', kelas: [1, 2, 3, 4, 5, 6], icon: '🎒', sub: 'Kelas 1–6 · Fase A, B, C', c: ['#ff9f1c', '#ff5e5b'] },
     SMP: { name: 'SMP', full: 'Sekolah Menengah Pertama', kelas: [7, 8, 9], icon: '🏫', sub: 'Kelas 7–9 · Fase D', c: ['#3ec1d3', '#2b5cf0'] },
-    SMK: { name: 'SMK', full: 'Sekolah Menengah Kejuruan', kelas: [10, 11, 12], icon: '🛠️', sub: 'Kelas 10–12 · Fase E, F', c: ['#a855f7', '#db2777'] }
+    SMA: { name: 'SMA', full: 'Sekolah Menengah Atas', kelas: [10, 11, 12], icon: '🎓', sub: 'Kelas 10–12 · Fase E, F', c: ['#06d6a0', '#0f766e'] },
+    SMK: { name: 'SMK', full: 'Sekolah Menengah Kejuruan', kelas: [10, 11, 12], icon: '🛠️', sub: 'Kelas 10–12 · Fase E, F', c: ['#a855f7', '#db2777'] },
+    MI: { name: 'MI', full: 'Madrasah Ibtidaiyah', kelas: [1, 2, 3, 4, 5, 6], icon: '🌙', sub: 'Kelas 1–6 · setara SD', c: ['#52b788', '#2d6a4f'], madrasah: true },
+    MTs: { name: 'MTs', full: 'Madrasah Tsanawiyah', kelas: [7, 8, 9], icon: '🕌', sub: 'Kelas 7–9 · setara SMP', c: ['#40916c', '#1b4332'], madrasah: true },
+    MA: { name: 'MA', full: 'Madrasah Aliyah', kelas: [10, 11, 12], icon: '📿', sub: 'Kelas 10–12 · setara SMA', c: ['#2d6a4f', '#081c15'], madrasah: true }
   };
+  const MAPEL_MADRASAH = ["Al-Qur'an Hadis", 'Akidah Akhlak', 'Fikih', 'Sejarah Kebudayaan Islam', 'Bahasa Arab'];
+  const setJ = k => { S.jenjang = k; QB.setJenjang(k); };
+  const PILIHAN = ['Fisika', 'Kimia', 'Biologi', 'Ekonomi', 'Sosiologi', 'Geografi', 'Antropologi', 'Koding & KA', 'PKK (Kewirausahaan)', 'Projek IPAS', 'K3 & Budaya Kerja', 'Informatika & KA'];
   const S = { jenjang: null, kelas: null, mapel: null, teams: ['Tim Merah', 'Tim Biru'] };
   try { const t = JSON.parse(localStorage.getItem('aj_teams')); if (Array.isArray(t) && t.length === 2) S.teams = t; } catch (e) {}
   const saveTeams = () => { try { localStorage.setItem('aj_teams', JSON.stringify(S.teams)); } catch (e) {} };
@@ -16,9 +23,9 @@ const App = (() => {
   function show(el) { E.clearAll(); document.body.classList.remove('game-active'); root.innerHTML = ''; root.append(el); }
   function btn(label, cls, fn) { const b = h('button', { class: 'btn3d ' + (cls || '') }, label); tap(b, () => { SFX.click(); fn(); }); return b; }
   function card(o, fn) {
-    const c = h('button', { class: 'card ' + (o.cls || ''), style: `--c1:${o.c[0]};--c2:${o.c[1]}` },
-      h('div', { class: 'ic' }, o.icon), h('h3', {}, o.title), o.p ? h('p', {}, o.p) : null,
-      o.tags ? h('div', { class: 'tags' }, o.tags.map(t => h('span', {}, t))) : null);
+    const inner = [h('h3', {}, o.title), o.p ? h('p', {}, o.p) : null, o.tags ? h('div', { class: 'tags' }, o.tags.map(t => h('span', {}, t))) : null];
+    const c = h('button', { class: 'card ' + (o.cls || ''), style: `--c1:${o.c[0]};--c2:${o.c[1]}`, title: o.p || '' },
+      h('div', { class: 'ic' }, o.icon), ...(o.compact ? [h('div', { class: 'body' }, ...inner)] : inner));
     tap(c, () => { SFX.click(); fn(); });
     return c;
   }
@@ -38,20 +45,25 @@ const App = (() => {
     el.append(fl);
     el.append(h('div', { class: 'home-center' },
       h('div', { class: 'logo' }, h('span', { class: 'l1' }, 'ARENA'), h('span', { class: 'l2' }, 'JUARA')),
-      h('p', { class: 'tag' }, `${GAMES.length} game edukasi versus untuk layar sentuh kelas · SD · SMP · SMK`),
+      h('p', { class: 'tag' }, `${GAMES.length} game edukasi versus untuk layar sentuh kelas · SD/MI · SMP/MTs · SMA/MA · SMK`),
       btn('▶ MAIN SEKARANG', 'big', jenjang),
       btn(`📝 Bank Soal Guru${Guru.count() ? ` (${Guru.count()})` : ''}`, 'white', () => Guru.list(guruApi)),
       h('div', { class: 'vs-badges' }, h('span', { class: 'pill red' }, S.teams[0]), h('b', {}, 'VS'), h('span', { class: 'pill blue' }, S.teams[1]))
     ));
-    el.append(h('div', { class: 'home-foot' }, 'Soal mengacu Capaian Pembelajaran Kurikulum Merdeka (Kep. Kepala BSKAP No. 046/H/KR/2025) dengan pendekatan Pembelajaran Mendalam · Berjalan offline'));
+    el.append(h('div', { class: 'home-foot' }, 'Soal mengacu Capaian Pembelajaran Kurikulum Merdeka (Kep. Kepala BSKAP No. 046/H/KR/2025) dengan pendekatan Pembelajaran Mendalam'));
     show(el);
   }
 
   /* ---------- jenjang ---------- */
   function jenjang() {
-    const g = h('div', { class: 'grid g3' });
-    Object.entries(JENJANG).forEach(([k, j]) => g.append(card({ cls: 'big', icon: j.icon, title: j.name, p: `${j.full}\n${j.sub}`, c: j.c }, () => { S.jenjang = k; kelas(); })));
-    show(menu('Pilih Jenjang', [], home, g));
+    const wrap = h('div', { class: 'mapel-wrap' });
+    [['🏫 Sekolah', false], ['🕌 Madrasah', true]].forEach(([title, mad]) => {
+      const g = h('div', { class: 'grid g4' });
+      Object.entries(JENJANG).filter(([, j]) => !!j.madrasah === mad)
+        .forEach(([k, j]) => g.append(card({ cls: 'big', icon: j.icon, title: j.name, p: `${j.full}\n${j.sub}`, c: j.c }, () => { setJ(k); kelas(); })));
+      wrap.append(h('div', { class: 'mapel-sec' }, h('h4', {}, title), g));
+    });
+    show(menu('Pilih Jenjang', [], home, wrap));
   }
 
   /* ---------- kelas ---------- */
@@ -68,12 +80,27 @@ const App = (() => {
 
   /* ---------- mapel ---------- */
   function mapel() {
-    const g = h('div', { class: 'grid' });
-    QB.mapelFor(S.kelas).forEach(m => {
-      const inf = QB.info(m);
-      g.append(card({ icon: inf.icon, title: m, p: QB.elemen(S.kelas, m), c: inf.c, tags: [`${QB.count(S.kelas, m)} soal`] }, () => { S.mapel = m; games(); }));
+    // kelompokkan mapel agar mudah dicari di layar besar
+    const GROUPS = [
+      ['📘 Mata Pelajaran Umum', m => !/^(PA |Kejuruan|Bahasa (Jawa|Sunda)|📝)/.test(m) && !PILIHAN.includes(m) && !MAPEL_MADRASAH.includes(m) && m !== 'Campuran'],
+      ['🕌 Mapel Keagamaan Madrasah', m => MAPEL_MADRASAH.includes(m)],
+      [S.jenjang === 'SMK' ? '🛠️ Kejuruan & Pilihan' : '🧪 Peminatan & Pilihan', m => /^Kejuruan/.test(m) || PILIHAN.includes(m)],
+      ['🕊️ Pendidikan Agama & Budi Pekerti', m => /^PA /.test(m)],
+      ['🗣️ Muatan Lokal', m => /^Bahasa (Jawa|Sunda)/.test(m)],
+      ['✏️ Soal Buatan Guru & Campuran', m => /^📝/.test(m) || m === 'Campuran']
+    ];
+    const list = QB.mapelFor(S.kelas);
+    const wrap = h('div', { class: 'mapel-wrap' });
+    GROUPS.forEach(([title, fn]) => {
+      const ms = list.filter(fn); if (!ms.length) return;
+      const g = h('div', { class: 'grid compact' });
+      ms.forEach(m => {
+        const inf = QB.info(m);
+        g.append(card({ compact: true, icon: inf.icon, title: m.replace(/^Kejuruan: /, ''), p: QB.elemen(S.kelas, m), c: inf.c, tags: [`${QB.count(S.kelas, m)} soal`] }, () => { S.mapel = m; games(); }));
+      });
+      wrap.append(h('div', { class: 'mapel-sec' }, h('h4', {}, title, h('span', {}, `${ms.length}`)), g));
     });
-    show(menu('Pilih Mata Pelajaran', [JENJANG[S.jenjang].name, `Kelas ${S.kelas}`, `Fase ${QB.fase(S.kelas)}`], kelas, g));
+    show(menu('Pilih Mata Pelajaran', [JENJANG[S.jenjang].name, `Kelas ${S.kelas}`, `Fase ${QB.fase(S.kelas)}`], kelas, wrap));
   }
 
   /* ---------- pilih game ---------- */
@@ -196,7 +223,7 @@ const App = (() => {
     show, menu, btn, home,
     play(set) {
       const k = set.kelas[0];
-      S.jenjang = k <= 6 ? 'SD' : k <= 9 ? 'SMP' : 'SMK';
+      setJ(k <= 6 ? 'SD' : k <= 9 ? 'SMP' : 'SMA');
       S.kelas = k; S.mapel = QB.CUSTOM_PREFIX + set.name;
       games();
     }

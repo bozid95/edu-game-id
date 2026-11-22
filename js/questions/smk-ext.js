@@ -67,7 +67,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: [11, 12], mapel: "PKK (Kewirausahaan)", elemen: "Proyek Kreatif & Kewirausahaan: peluang usaha, produksi, pemasaran, keuangan",
+  jenjang: "SMK", kelas: [11, 12], mapel: "PKK (Kewirausahaan)", elemen: "Proyek Kreatif & Kewirausahaan: peluang usaha, produksi, pemasaran, keuangan",
   mc: [
     ["Orang yang berani mengambil risiko membuka usaha disebut...", "wirausahawan", "karyawan", "konsumen", "pegawai negeri"],
     ["Analisis kekuatan, kelemahan, peluang, dan ancaman disebut analisis...", "SWOT", "BEP", "ROI", "PDCA"],
@@ -133,7 +133,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: [10, 11, 12], mapel: "Informatika & KA", elemen: "Algoritma lanjut, Keamanan siber, Data, Etika & dampak AI",
+  jenjang: "SMK", kelas: [10, 11, 12], mapel: "Informatika & KA", elemen: "Algoritma lanjut, Keamanan siber, Data, Etika & dampak AI",
   mc: [
     ["Algoritma pengurutan yang membandingkan dua elemen bersebelahan dan menukarnya adalah...", "bubble sort", "binary search", "linear search", "hashing"],
     ["Pencarian pada data terurut dengan membagi dua setiap langkah disebut...", "binary search", "linear search", "bubble sort", "DFS"],
@@ -220,7 +220,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: [10, 11, 12], mapel: "K3 & Budaya Kerja", elemen: "Identifikasi bahaya, Ergonomi, Etos kerja, Lingkungan kerja",
+  jenjang: "SMK", kelas: [10, 11, 12], mapel: "K3 & Budaya Kerja", elemen: "Identifikasi bahaya, Ergonomi, Etos kerja, Lingkungan kerja",
   mc: [
     ["Proses mengenali sumber bahaya di tempat kerja disebut...", "identifikasi bahaya", "promosi", "audit keuangan", "rekrutmen"],
     ["Hierarki pengendalian risiko yang paling efektif adalah...", "eliminasi", "APD", "pengendalian administrasi", "rambu peringatan"],

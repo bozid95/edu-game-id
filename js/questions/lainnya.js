@@ -112,7 +112,7 @@ QB.add({
 /* ---------------- KEJURUAN SMK ---------------- */
 const VOK = [10, 11, 12];
 QB.add({
-  kelas: VOK, mapel: "Kejuruan: TJKT", elemen: "Teknik Jaringan Komputer & Telekomunikasi: IP, perangkat, kabel, layanan",
+  jenjang: "SMK", kelas: VOK, mapel: "Kejuruan: TJKT", elemen: "Teknik Jaringan Komputer & Telekomunikasi: IP, perangkat, kabel, layanan",
   mc: [
     ["Subnet mask default untuk IP kelas C adalah...", "255.255.255.0", "255.0.0.0", "255.255.0.0", "255.255.255.255"],
     ["Rentang oktet pertama IP kelas C adalah...", "192–223", "1–126", "128–191", "224–239"],
@@ -133,7 +133,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: VOK, mapel: "Kejuruan: Akuntansi", elemen: "Akuntansi & Keuangan Lembaga: persamaan dasar, jurnal, siklus akuntansi",
+  jenjang: "SMK", kelas: VOK, mapel: "Kejuruan: Akuntansi", elemen: "Akuntansi & Keuangan Lembaga: persamaan dasar, jurnal, siklus akuntansi",
   mc: [
     ["Persamaan dasar akuntansi adalah...", "Harta = Utang + Modal", "Harta = Modal − Utang", "Utang = Harta + Modal", "Modal = Harta + Utang"],
     ["Pencatatan transaksi pertama kali dilakukan di...", "jurnal umum", "neraca", "buku besar", "laporan laba rugi"],
@@ -152,7 +152,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: VOK, mapel: "Kejuruan: Otomotif", elemen: "Teknik Otomotif: motor bakar, kelistrikan, perawatan",
+  jenjang: "SMK", kelas: VOK, mapel: "Kejuruan: Otomotif", elemen: "Teknik Otomotif: motor bakar, kelistrikan, perawatan",
   mc: [
     ["Urutan langkah motor 4 tak adalah hisap, kompresi, usaha, dan...", "buang", "pengapian", "pendinginan", "pelumasan"],
     ["Komponen yang memercikkan bunga api pada motor bensin adalah...", "busi", "karburator", "piston", "radiator"],
@@ -171,7 +171,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: VOK, mapel: "Kejuruan: Kuliner", elemen: "Kuliner/Tata Boga: teknik memasak, sanitasi, keamanan pangan",
+  jenjang: "SMK", kelas: VOK, mapel: "Kejuruan: Kuliner", elemen: "Kuliner/Tata Boga: teknik memasak, sanitasi, keamanan pangan",
   mc: [
     ["Teknik memasak dengan uap air disebut...", "mengukus (steaming)", "menggoreng", "memanggang", "menumis"],
     ["Teknik memasak dalam minyak banyak hingga terendam disebut...", "deep frying", "sautéing", "boiling", "baking"],
@@ -190,7 +190,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: VOK, mapel: "Kejuruan: Perkantoran", elemen: "Manajemen Perkantoran & Layanan Bisnis: korespondensi, kearsipan, pelayanan",
+  jenjang: "SMK", kelas: VOK, mapel: "Kejuruan: Perkantoran", elemen: "Manajemen Perkantoran & Layanan Bisnis: korespondensi, kearsipan, pelayanan",
   mc: [
     ["Sistem kearsipan berdasarkan urutan huruf disebut sistem...", "abjad", "kronologis", "geografis", "nomor"],
     ["Sistem kearsipan berdasarkan tanggal disebut sistem...", "kronologis", "abjad", "subjek", "geografis"],
@@ -209,7 +209,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: VOK, mapel: "Kejuruan: Pemasaran", elemen: "Bisnis Digital & Pemasaran: STP, bauran pemasaran, layanan pelanggan",
+  jenjang: "SMK", kelas: VOK, mapel: "Kejuruan: Pemasaran", elemen: "Bisnis Digital & Pemasaran: STP, bauran pemasaran, layanan pelanggan",
   mc: [
     ["Membagi pasar menjadi kelompok konsumen disebut...", "segmentasi", "targeting", "positioning", "branding"],
     ["Memilih segmen pasar yang dituju disebut...", "targeting", "segmentasi", "positioning", "pricing"],
@@ -228,7 +228,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: VOK, mapel: "Kejuruan: DKV", elemen: "Desain Komunikasi Visual: warna, tipografi, layout, format file",
+  jenjang: "SMK", kelas: VOK, mapel: "Kejuruan: DKV", elemen: "Desain Komunikasi Visual: warna, tipografi, layout, format file",
   mc: [
     ["Mode warna untuk desain yang dicetak adalah...", "CMYK", "RGB", "HEX saja", "HSL saja"],
     ["Mode warna untuk tampilan layar adalah...", "RGB", "CMYK", "Pantone saja", "grayscale saja"],
@@ -247,7 +247,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: VOK, mapel: "Kejuruan: Listrik", elemen: "Teknik Ketenagalistrikan: besaran listrik, instalasi, alat ukur, keselamatan",
+  jenjang: "SMK", kelas: VOK, mapel: "Kejuruan: Listrik", elemen: "Teknik Ketenagalistrikan: besaran listrik, instalasi, alat ukur, keselamatan",
   mc: [
     ["Tegangan listrik PLN untuk rumah tangga di Indonesia adalah...", "220 volt", "110 volt", "12 volt", "380 volt"],
     ["Frekuensi listrik PLN adalah...", "50 Hz", "60 Hz", "100 Hz", "25 Hz"],

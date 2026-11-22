@@ -99,6 +99,20 @@ const MathGen = (() => {
     peluangKoin() { return { q: `Dua koin dilempar bersamaan. Peluang muncul dua angka adalah...`, a: '1/4', d: ['1/2', '1/3', '3/4'] }; },
     permutasi() { const n = ri(3, 5); const f = [1, 1, 2, 6, 24, 120][n]; return { q: `Banyak cara menyusun ${n} buku berbeda dalam satu baris adalah...`, a: f }; },
     kombinasi() { const n = ri(4, 7); return { q: `Dari ${n} siswa dipilih 2 orang sebagai perwakilan. Banyak cara memilih adalah...`, a: n * (n - 1) / 2 }; },
+    /* ---- tambahan Matematika SMA (Fase E–F, termasuk tingkat lanjut) ---- */
+    trig() {
+      const T = [['sin 30°', '1/2'], ['cos 60°', '1/2'], ['tan 45°', '1'], ['sin 90°', '1'], ['cos 0°', '1'], ['sin 0°', '0'], ['cos 90°', '0'],
+        ['sin 45°', '½√2'], ['cos 45°', '½√2'], ['cos 30°', '½√3'], ['sin 60°', '½√3'], ['tan 60°', '√3'], ['tan 30°', '⅓√3'], ['cos 180°', '−1']];
+      const [e, a] = pick(T);
+      return { e, a, d: fracD(a, shuffle(['0', '1/2', '1', '½√2', '½√3', '√3', '⅓√3', '−1', '2'])) };
+    },
+    det2() { const a = ri(-5, 9), b = ri(-5, 9), c = ri(-5, 9), d = ri(-5, 9); return { q: `Determinan matriks [${a} ${b} ; ${c} ${d}] adalah...`, a: a * d - b * c }; },
+    vektor() { const a = ri(-5, 6), b = ri(-5, 6), c = ri(-5, 6), d = ri(-5, 6); return { q: `Jika u = (${a}, ${b}) dan v = (${c}, ${d}), maka u · v = ...`, a: a * c + b * d }; },
+    komposisi() { const a = ri(2, 5), b = ri(-6, 6) || 1, c = ri(2, 4), d = ri(-5, 5) || 2, x = ri(-3, 4); return { q: `f(x) = ${a}x ${sg(b)}, g(x) = ${c}x ${sg(d)}. Nilai (f∘g)(${x}) = ...`, a: a * (c * x + d) + b }; },
+    limit() { const a = ri(1, 9); return { q: `lim x→${a} (x² − ${a * a}) / (x − ${a}) = ...`, a: 2 * a }; },
+    integral() { const n = ri(1, 3), k = ri(1, 5), a = k * (n + 1); return { q: `∫ ${a}x${n === 1 ? '' : sup(n)} dx = kx${sup(n + 1)} + C. Nilai k = ...`, a: k }; },
+    integralTentu() { const a = ri(1, 4), b = ri(1, 4); return { q: `∫₀^${b} ${2 * a}x dx = ...`, a: a * b * b }; },
+    logSifat() { const [e, v] = pick([['log 2 + log 5', 1], ['log 20 + log 5', 2], ['log 1000', 3], ['²log 4 + ²log 8', 5], ['³log 81 − ³log 3', 3], ['log 500 − log 5', 2]]); return { e, a: v }; },
     turunan() { const a = ri(2, 6), n = ri(2, 4); return { q: `Turunan pertama f(x) = ${a}x${sup(n)} adalah ...x${sup(n - 1 === 1 ? '' : n - 1)}. Koefisiennya adalah...`, a: a * n }; }
   };
 
@@ -117,10 +131,18 @@ const MathGen = (() => {
     12: ['peluangDadu', 'peluangKoin', 'rataRata', 'median', 'modus', 'permutasi', 'kombinasi', 'turunan']
   };
 
+  const LEVEL_SMA = {
+    10: ['eksponen', 'eksponen2', 'log', 'logSifat', 'aritmetika', 'quadVal', 'spldv', 'trig'],
+    11: ['komposisi', 'trig', 'det2', 'vektor', 'peluangDadu', 'kombinasi', 'geometri', 'deret'],
+    12: ['limit', 'turunan', 'integral', 'integralTentu', 'det2', 'median', 'rataRata', 'permutasi']
+  };
+
   function make(kelas) {
     const k = Math.max(1, Math.min(12, kelas));
-    let pool = LEVEL[k];
-    if (k > 1 && Math.random() < 0.25) pool = LEVEL[k - 1];
+    const sma = k >= 10 && typeof QB !== 'undefined' && QB.jenjang && ['SMA', 'MA'].includes(QB.jenjang());
+    const L = sma ? LEVEL_SMA : LEVEL;
+    let pool = L[k] || LEVEL[k];
+    if (k > 1 && Math.random() < 0.25) pool = L[k - 1] || LEVEL[k - 1];
     const g = G[pick(pool)]();
     const as = fmt(g.a);
     let d = g.d ? g.d.filter(x => x !== as) : near(g.a);

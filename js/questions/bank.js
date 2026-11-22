@@ -37,6 +37,18 @@ const QB = (() => {
     'PA Hindu':             { icon: '🛕', c: ['#f77f00', '#d62828'] },
     'PA Buddha':            { icon: '☸️', c: ['#e9c46a', '#e76f51'] },
     'PA Khonghucu':         { icon: '🏮', c: ['#d00000', '#9d0208'] },
+    'Fisika':               { icon: '⚛️', c: ['#4361ee', '#3a0ca3'] },
+    'Kimia':                { icon: '⚗️', c: ['#06d6a0', '#118a7e'] },
+    'Biologi':              { icon: '🧬', c: ['#52b788', '#1b4332'] },
+    'Ekonomi':              { icon: '📈', c: ['#f8961e', '#bc6c25'] },
+    'Sosiologi':            { icon: '👥', c: ['#e76f51', '#9d0208'] },
+    'Geografi':             { icon: '🗺️', c: ['#2a9d8f', '#264653'] },
+    'Antropologi':          { icon: '🏺', c: ['#b08968', '#7f5539'] },
+    "Al-Qur'an Hadis":      { icon: '📗', c: ['#2d6a4f', '#1b4332'] },
+    'Akidah Akhlak':        { icon: '🤲', c: ['#40916c', '#1b4332'] },
+    'Fikih':                { icon: '🕌', c: ['#52b788', '#2d6a4f'] },
+    'Sejarah Kebudayaan Islam': { icon: '🏛️', c: ['#74c69d', '#2d6a4f'] },
+    'Bahasa Arab':          { icon: '🔠', c: ['#95d5b2', '#40916c'] },
     'Campuran':             { icon: '🎲', c: ['#ff5e9c', '#8338ec'] }
   };
   const ELEMEN_MTK = {
@@ -48,12 +60,30 @@ const QB = (() => {
     11: 'Barisan & deret, fungsi kuadrat', 12: 'Peluang, statistika, kaidah pencacahan'
   };
 
+  const ELEMEN_MTK_SMA = {
+    10: 'Eksponen, logaritma, barisan, fungsi kuadrat, trigonometri dasar',
+    11: 'Komposisi fungsi, matriks, vektor, trigonometri, peluang',
+    12: 'Limit, turunan, integral, matriks, statistika'
+  };
+
   function add(def) { banks.push(def); }
+
+  /* jenjang aktif (SD/SMP/SMA/SMK): paket bertanda `jenjang` hanya muncul di jenjang itu,
+     paket tanpa tanda berlaku untuk semua jenjang pada kelas yang sama */
+  let curJ = null;
+  function setJenjang(j) { curJ = j; }
+  function jenjang() { return curJ; }
+  // MA (Madrasah Aliyah) juga memakai paket SMA (peminatan, Matematika SMA, dll.)
+  const INCLUDES = { MA: ['MA', 'SMA'] };
+  const MADRASAH = ['MI', 'MTs', 'MA'];
+  const okJ = b => !b.jenjang || !curJ || (INCLUDES[curJ] || [curJ]).includes(b.jenjang);
+  // di madrasah, PA umum diganti mapel rumpun PAI (Al-Qur'an Hadis, Akidah Akhlak, Fikih, SKI)
+  const okMapel = m => !(MADRASAH.includes(curJ) && /^PA /.test(m));
 
   function get(kelas, mapel) {
     const out = { mc: [], tf: [], pair: [], ord: [], elemen: [] };
     banks.forEach(b => {
-      if (b.mapel !== mapel || !b.kelas.includes(kelas)) return;
+      if (b.mapel !== mapel || !b.kelas.includes(kelas) || !okJ(b)) return;
       ['mc', 'tf', 'pair', 'ord'].forEach(k => { if (b[k]) out[k].push(...b[k]); });
       if (b.elemen) out.elemen.push(b.elemen);
     });
@@ -62,7 +92,7 @@ const QB = (() => {
 
   function mapelFor(kelas) {
     const set = [];
-    banks.forEach(b => { if (b.kelas.includes(kelas) && !set.includes(b.mapel)) set.push(b.mapel); });
+    banks.forEach(b => { if (b.kelas.includes(kelas) && okJ(b) && okMapel(b.mapel) && !set.includes(b.mapel)) set.push(b.mapel); });
     return ['Matematika', ...set, 'Campuran'];
   }
 
@@ -86,7 +116,7 @@ const QB = (() => {
   }
 
   function elemen(kelas, mapel) {
-    if (mapel === 'Matematika') return ELEMEN_MTK[kelas] || '';
+    if (mapel === 'Matematika') return ((curJ === 'SMA' || curJ === 'MA') && ELEMEN_MTK_SMA[kelas]) || ELEMEN_MTK[kelas] || '';
     if (mapel === 'Campuran') return 'Soal acak dari semua mata pelajaran';
     return get(kelas, mapel).elemen.join(' · ');
   }
@@ -113,5 +143,5 @@ const QB = (() => {
     let s = ''; bytes.forEach(b => s += String.fromCharCode(b)); return btoa(s);
   }
 
-  return { add, get, mapelFor, info, elemen, count, fase, setCustom, isCustom, CUSTOM_PREFIX, dump, load, encode };
+  return { add, get, mapelFor, info, elemen, count, fase, setCustom, isCustom, CUSTOM_PREFIX, dump, load, encode, setJenjang, jenjang };
 })();

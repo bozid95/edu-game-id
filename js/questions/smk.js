@@ -77,7 +77,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: SMK, mapel: "Informatika & KA", elemen: "Jaringan, Pemrograman, Basis data, Koding & Kecerdasan Artifisial",
+  jenjang: "SMK", kelas: SMK, mapel: "Informatika & KA", elemen: "Jaringan, Pemrograman, Basis data, Koding & Kecerdasan Artifisial",
   mc: [
     ["Alamat unik perangkat dalam jaringan disebut...", "IP address", "URL", "email", "password"],
     ["Topologi dengan semua perangkat terhubung ke satu switch pusat adalah...", "star", "bus", "ring", "mesh"],
@@ -118,7 +118,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: [10], mapel: "Projek IPAS", elemen: "Energi, Lingkungan, Bioteknologi, Kewirausahaan",
+  jenjang: "SMK", kelas: [10], mapel: "Projek IPAS", elemen: "Energi, Lingkungan, Bioteknologi, Kewirausahaan",
   mc: [
     ["Contoh energi terbarukan adalah...", "tenaga surya", "batu bara", "minyak bumi", "gas alam"],
     ["Gas rumah kaca utama penyebab pemanasan global adalah...", "karbon dioksida", "oksigen", "nitrogen", "helium"],
@@ -152,7 +152,7 @@ QB.add({
 });
 
 QB.add({
-  kelas: SMK, mapel: "K3 & Budaya Kerja", elemen: "Keselamatan & Kesehatan Kerja, APD, Budaya 5R (lintas jurusan)",
+  jenjang: "SMK", kelas: SMK, mapel: "K3 & Budaya Kerja", elemen: "Keselamatan & Kesehatan Kerja, APD, Budaya 5R (lintas jurusan)",
   mc: [
     ["K3 adalah singkatan dari...", "Keselamatan dan Kesehatan Kerja", "Kebersihan Keamanan Kenyamanan", "Kerja Keras Konsisten", "Komite Kerja Karyawan"],
     ["APD adalah singkatan dari...", "Alat Pelindung Diri", "Alat Pemadam Darurat", "Area Pekerja Dilarang", "Aturan Pakai Darurat"],

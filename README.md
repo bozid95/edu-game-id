@@ -2,7 +2,8 @@
 
 Kumpulan **13 game edukasi 2 tim (Merah vs Biru)** untuk layar sentuh interaktif di kelas.
 Soal mengacu **Capaian Pembelajaran Kurikulum Merdeka (Kep. Kepala BSKAP No. 046/H/KR/2025)**
-dengan pendekatan Pembelajaran Mendalam, untuk **SD kelas 1–6, SMP kelas 7–9, dan SMK kelas 10–12**.
+dengan pendekatan Pembelajaran Mendalam, untuk **7 jenjang**: SD & MI (kelas 1–6), SMP & MTs (kelas 7–9),
+SMA, MA & SMK (kelas 10–12).
 
 Tanpa instalasi, tanpa internet: cukup buka `index.html` di Chrome/Edge pada TV board.
 
@@ -29,7 +30,23 @@ Setiap game bisa diatur **waktu** dan **target** sebelum mulai (ada nilai defaul
 - **SD:** Matematika (generator tak terbatas), Bahasa Indonesia, Pendidikan Pancasila, IPAS, Bahasa Inggris, PJOK, Seni Budaya, Koding & KA (kls 5–6)
 - **SMP:** Matematika, IPA (per kelas 7/8/9), IPS (per kelas), Bahasa Indonesia, Bahasa Inggris, Informatika, Koding & KA, Pendidikan Pancasila, PJOK, Seni Budaya
 - **SMK:** Matematika, Bahasa Indonesia, Bahasa Inggris, Informatika & KA, Projek IPAS (kls 10), Sejarah, Pendidikan Pancasila, PJOK, Seni Budaya, PKK (kls 11–12), K3 & Budaya Kerja, **Kejuruan:** TJKT, Akuntansi, Otomotif, Kuliner, Perkantoran, Pemasaran, DKV, Listrik
-- **Semua jenjang:** Pendidikan Agama (Islam, Kristen, Katolik, Hindu, Buddha, Khonghucu), muatan lokal Bahasa Jawa & Bahasa Sunda, mode **Campuran**
+- **SMA:** Matematika SMA (trigonometri, matriks, vektor, limit, turunan, integral), mapel umum bersama, peminatan **Fisika, Kimia, Biologi, Ekonomi, Sosiologi, Geografi, Antropologi**, Informatika, Koding & KA
+- **Madrasah (MI, MTs, MA):** mapel umum setara SD/SMP/SMA + rumpun PAI madrasah per jenjang: **Al-Qur'an Hadis, Akidah Akhlak, Fikih, Sejarah Kebudayaan Islam, Bahasa Arab**
+- **Semua jenjang:** Pendidikan Agama (Islam, Kristen, Katolik, Hindu, Buddha, Khonghucu; di madrasah diganti rumpun PAI), muatan lokal Bahasa Jawa & Bahasa Sunda, mode **Campuran**
+
+### Rekap bank soal
+| Jenjang | Mapel | Paket | Butir soal statis* |
+|---|---|---|---|
+| SD | 16 | 31 | 875 |
+| MI | 15 | 30 | 830 |
+| SMP | 18 | 27 | 759 |
+| MTs | 17 | 26 | 775 |
+| SMA | 22 | 24 | 593 |
+| MA | 21 | 23 | 557 |
+| SMK | 25 | 29 | 646 |
+| **Total unik** | | **98** | **2.578** |
+
+\*Belum termasuk Matematika (generator soal tak terbatas per kelas). Mapel umum dipakai bersama antarjenjang setara, jadi angka per jenjang saling tumpang tindih.
 
 ## Bank Soal Guru ✏️
 Menu **📝 Bank Soal Guru** di beranda: guru membuat paket soal sendiri (PG, Benar/Salah, Pasangan, Urutan)
